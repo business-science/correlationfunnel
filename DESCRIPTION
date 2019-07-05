@@ -1,0 +1,36 @@
+Package: correlationfunnel
+Type: Package
+Title: Speed Up Exploratory Data Analysis (EDA) with the Correlation Funnel
+Version: 0.1.0
+Authors@R: 
+    person("Matt", "Dancho", email = "mdancho@business-science.io", role = c("aut", "cre"))
+Description: 
+    The 'correlationfunnel' package drastically speeds up Exploratory Data Analysis (EDA)
+    by providing a succinct workflow and interactive visualization tools for understanding
+    which features have relationships to target (response). This is excellent for pre-modeling / 
+    pre-Machine Learning since you can determine quickly if you have predictive features, 
+    those with relationship to the target feature.
+URL: https://github.com/business-science/correlationfunnel
+BugReports: https://github.com/business-science/correlationfunnel/issues
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Depends:
+    R (>= 3.1)
+Imports: 
+    stats,
+    magrittr
+Suggests:
+    rlang,
+    recipes,
+    tibble,
+    dplyr,
+    plotly,
+    tidyr,
+    tidyquant,
+    ggrepel,
+    stringr,
+    forcats,
+    purrr
+RoxygenNote: 6.1.1
+Roxygen: list(markdown = TRUE)

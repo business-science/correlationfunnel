@@ -1,0 +1,145 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%",
+  dpi = 300,
+  message = F,
+  warning = F
+)
+
+devtools::load_all()
+library(tidyverse)
+```
+# correlationfunnel
+
+
+[![Travis build status](https://travis-ci.org/business-science/correlationfunnel.svg?branch=master)](https://travis-ci.org/business-science/correlationfunnel)
+[![Coverage status](https://codecov.io/gh/business-science/correlationfunnel/branch/master/graph/badge.svg)](https://codecov.io/github/business-science/correlationfunnel?branch=master)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/correlationfunnel)](https://cran.r-project.org/package=correlationfunnel)
+![](http://cranlogs.r-pkg.org/badges/correlationfunnel?color=brightgreen)
+![](http://cranlogs.r-pkg.org/badges/grand-total/correlationfunnel?color=brightgreen)
+
+> Speed Up Exploratory Data Analysis (EDA)
+
+The goal of `correlationfunnel` is to speed up Exploratory Data Analysis (EDA). Here's how to use it. 
+
+## Installation
+
+You can install the released version of `correlationfunnel` from [GitHub](https://github.com/business-science/) with:
+
+``` r
+devtools::install_github("business-science/correlationfunnel")
+```
+
+## Correlation Funnel in 2-Minutes
+
+Exploratory data analysis (EDA) often involves looking at feature-target relationships independently. This usually involves creating lots of visualizations. But, there's a better way...
+
+Yes - Enter `correlationfunnel`. 
+
+The `correlationfunnel` package drastically speeds up EDA by providing a __succinct workflow__ and __interactive visualization tools__ for understanding which features have relationships to target (response). This is excellent for pre-modeling / pre-Machine Learning since you can determine quickly if you have predictive features (those with relationship to the target feature). 
+
+## Example - Bank Marketing Campaign
+
+First, load the libraries.
+
+```{r example}
+library(correlationfunnel)
+library(dplyr)
+```
+
+Next, collect data to analyze. We'll use Marketing Campaign Data for a Bank that was popularized by the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Bank+Marketing). We can load the data with `data("bank_marketing_campaign_tbl")`.
+
+```{r}
+# Use ?bank_marketing_campagin_tbl to get a description of the marketing campaign features
+data("bank_marketing_campaign_tbl")
+
+bank_marketing_campaign_tbl %>% glimpse()
+```
+
+### Response & Predictor Relationships
+
+Most modeling problems involve a response (Enrolled in `TERM_DEPOSIT`, yes/no) and predictors (AGE, JOB, MARITAL, etc). Our job is to determine which predictors are related to the response. We can do this through __Binary Correlation Analysis__.
+
+### Binary Correlation Analysis
+
+Binary Correlation Analysis is the process of converting continuous (numeric) and categorical (character/factor) data to binary features. We can then perform a correlation analysis to see if there is predictive value between the features and the response (target).
+
+#### Step 1: Convert to Binary Format
+
+The first step is converting the continuous and categorical data into binary (0/1) format. We de-select any non-predictive features. The `binarize()` function then converts the features into binary features. 
+
+```{r}
+bank_marketing_campaign_binarized_tbl <- bank_marketing_campaign_tbl %>%
+    select(-ID) %>%
+    binarize(n_bins = 4, thresh_infreq = 0.01)
+
+bank_marketing_campaign_binarized_tbl
+```
+
+#### Step 2: Perform Correlation Analysis
+
+The second step is to perform a correlation analysis between the response (target = TERM_DEPOSIT_yes) and the rest of the features. This returns a specially formatted tibble with the feature, the bin, and the bin's correlation to the target. The format is exactly what we need for the next step - Producing the __Correlation Funnel__
+
+```{r}
+bank_marketing_campaign_correlated_tbl <- bank_marketing_campaign_binarized_tbl %>%
+    correlate(target = TERM_DEPOSIT__yes)
+
+bank_marketing_campaign_correlated_tbl
+```
+
+#### Step 3: Visualize the Correlation Funnel
+
+A __Correlation Funnel__ is an tornado plot that lists the highest correlation features (based on absolute magnitude) at the top of the and the lowest correlation features at the bottom. The resulting visualization looks like a Funnel. 
+
+To produce the __Correlation Funnel__, use `plot_correlation_funnel()`.
+
+```{r, fig.height=8}
+bank_marketing_campaign_correlated_tbl %>%
+    plot_correlation_funnel(interactive = FALSE)
+```
+
+
+### Examining the Results
+
+The most important features are towards the top. So we can investigate these.
+
+```{r}
+bank_marketing_campaign_correlated_tbl %>%
+    filter(feature %in% c("DURATION", "POUTCOME", "CONTACT", "HOUSING")) %>%
+    plot_correlation_funnel(interactive = FALSE)
+```
+
+We can see that the following prospect groups have a much greater correlation with enrollment in the TERM DEPOSIT product:
+
+- When the DURATION, the amount of time a prospect is engaged in marketing campaign material, is 319 seconds or longer.
+
+- When POUTCOME, whether or not a prospect has previously enrolled in a product, is "success".
+
+- When CONTACT, the medium used to contact the person, is "cellular"
+
+- When HOUSING, whether or not the contact has a HOME LOAN is "no"
+
+## Usage in the Real-World
+
+[Business Science](https://www.business-science.io/) teaches students how to apply data science for business. The entire curriculum is crafted around business consulting with data science. Learn from us with real-world projects.
+
+   
+
+## Learn from Real-World Business Projects
+
+Students learn by solving real world projects using our repeatable project-management framework along with cutting-edge tools like the Correlation Analysis, Automated Machine Learning, and Feature Explanation as part of our ROI-Driven Data Science Curriculum.
+
+- [Learn Data Science Foundations (DS4B 101-R)](https://university.business-science.io/p/ds4b-101-r-business-analysis-r): Learn the entire `tidyverse` (`dplyr`, `ggplot2`, `rmarkdown`, &amp; more) and `parsnip` - Solve 2 Projects - Customer Segmentation and Price Optimization projects
+
+- [Learn Advanced Machine Learning &amp; Business Consulting (DS4B 201-R)](https://university.business-science.io/p/hr201-using-machine-learning-h2o-lime-to-predict-employee-turnover/): Churn Project solved with Correlation Analysis, `H2O` AutoML, `LIME` Feature Explanation, and ROI-driven Analysis / Recommendation Systems
+
+- [Learn Predictive Web Application Development (DS4B 102-R)](https://university.business-science.io/p/ds4b-102-r-shiny-web-application-business-level-1/): Build 2 Predictive `Shiny` Web Apps - Sales Dashboard with Demand Forecasting &amp; Price Prediction App
