@@ -30,8 +30,11 @@ devtools::install_github("business-science/correlationfunnel")
 **Problem**: Exploratory data analysis (EDA) often involves looking at
 feature-target relationships independently. The problem is that this
 process of comparing feature after feature is very time consuming even
-for small data sets. Rather than search for relationships, what if we
-could let the relationships come to us?
+for small data sets. ***Rather than search for relationships, what if we
+could let the relationships come to
+us?***
+
+<img src="man/figures/README-corr_funnel.png" width="35%" align="right" style="border-style: solid; border-width: 2px; border-color: #2c3e50; margin-left: 10px; "/>
 
 **Solution:** Enter `correlationfunnel`. The package drastically speeds
 up EDA by providing a **succinct workflow** and **interactive

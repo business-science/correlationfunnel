@@ -39,10 +39,12 @@ You can install the released version of `correlationfunnel` from [GitHub](https:
 devtools::install_github("business-science/correlationfunnel")
 ```
 
-## Correlation Funnel in 2-Minutes
+## Correlation Funnel in 2-Minutes 
 
 __Problem__:
-Exploratory data analysis (EDA) often involves looking at feature-target relationships independently. The problem is that this process of comparing feature after feature is very time consuming even for small data sets. Rather than search for relationships, what if we could let the relationships come to us?
+Exploratory data analysis (EDA) often involves looking at feature-target relationships independently. The problem is that this process of comparing feature after feature is very time consuming even for small data sets. ___Rather than search for relationships, what if we could let the relationships come to us?___
+
+<img src="man/figures/README-corr_funnel.png" width="35%" align="right" style="border-style: solid; border-width: 2px; border-color: #2c3e50; margin-left: 10px; "/>
 
 __Solution:__ 
 Enter `correlationfunnel`. The package drastically speeds up EDA by providing a __succinct workflow__ and __interactive visualization tools__ for understanding which features have relationships to target (response). This is excellent for pre-modeling / pre-Machine Learning since you can determine quickly if you have predictive features (those with relationship to the target feature). 
@@ -112,7 +114,7 @@ bank_marketing_campaign_correlated_tbl %>%
 
 The most important features are towards the top. So we can investigate these.
 
-```{r, fig.height=4}
+```{r, fig.height=3}
 bank_marketing_campaign_correlated_tbl %>%
     filter(feature %in% c("DURATION", "POUTCOME", "CONTACT", "HOUSING")) %>%
     plot_correlation_funnel(interactive = FALSE, limits = c(-0.4, 0.4))
