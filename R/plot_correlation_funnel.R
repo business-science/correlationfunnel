@@ -26,7 +26,6 @@
 #'     plot_correlation_funnel()
 #'
 #'
-#'
 #' @export
 plot_correlation_funnel <- function(data,  interactive = TRUE, limits = c(-1, 1), alpha = 1) {
     UseMethod("plot_correlation_funnel", data)
@@ -49,16 +48,16 @@ plot_correlation_funnel.data.frame <- function(data,  interactive = TRUE, limits
                                          Correlation: {round(correlation, 3)}"))
 
         g <- data %>%
-            ggplot2::ggplot(aes(x = correlation, y = feature, text = label_text)) +
+            ggplot2::ggplot(ggplot2::aes(x = correlation, y = feature, text = label_text)) +
 
             # Geometries
             ggplot2::geom_vline(xintercept = 0, linetype = 2, color = "red") +
             ggplot2::geom_point(color = "#2c3e50", alpha = alpha) +
-            # geom_text_repel(aes(label = bin), size = 3, color = "#2c3e50") +
+            # ggrepel::geom_text_repel(ggplot2::aes(label = bin), size = 3, color = "#2c3e50") +
 
             # Formatting
             ggplot2::scale_x_continuous(limits = limits) +
-            tidyquant::theme_tq()
+            theme_tq()
 
         p <- plotly::ggplotly(g, tooltip = "text")
 
@@ -66,16 +65,16 @@ plot_correlation_funnel.data.frame <- function(data,  interactive = TRUE, limits
 
     } else {
         g <- data %>%
-            ggplot2::ggplot(aes(x = correlation, y = feature, text = bin)) +
+            ggplot2::ggplot(ggplot2::aes(x = correlation, y = feature, text = bin)) +
 
             # Geometries
             ggplot2::geom_vline(xintercept = 0, linetype = 2, color = "red") +
             ggplot2::geom_point(color = "#2c3e50") +
-            ggrepel::geom_text_repel(aes(label = bin), size = 3, color = "#2c3e50") +
+            ggrepel::geom_text_repel(ggplot2::aes(label = bin), size = 3, color = "#2c3e50") +
 
             # Formatting
             ggplot2::scale_x_continuous(limits = limits) +
-            tidyquant::theme_tq()
+            theme_tq()
 
         return(g)
     }

@@ -33,7 +33,6 @@ bank_marketing_campaign_tbl \%>\%
     plot_correlation_funnel()
 
 
-
 }
 \seealso{
 \code{\link[=binarize]{binarize()}}, \code{\link[=correlate]{correlate()}}

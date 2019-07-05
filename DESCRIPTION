@@ -18,16 +18,16 @@ LazyData: true
 Depends:
     R (>= 3.1)
 Imports: 
-    stats,
-    magrittr
-Suggests:
+    ggplot2,
     rlang,
     recipes,
+    magrittr
+Suggests:
+    stats,
     tibble,
     dplyr,
     plotly,
     tidyr,
-    tidyquant,
     ggrepel,
     stringr,
     forcats,
