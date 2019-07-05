@@ -20,7 +20,7 @@ library(tidyverse)
 ```
 # correlationfunnel
 
-
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![Travis build status](https://travis-ci.org/business-science/correlationfunnel.svg?branch=master)](https://travis-ci.org/business-science/correlationfunnel)
 [![Coverage status](https://codecov.io/gh/business-science/correlationfunnel/branch/master/graph/badge.svg)](https://codecov.io/github/business-science/correlationfunnel?branch=master)
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/correlationfunnel)](https://cran.r-project.org/package=correlationfunnel)
