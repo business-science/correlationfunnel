@@ -140,6 +140,8 @@ We can see that the following prospect groups have a much greater correlation wi
 
 Students learn by solving real world projects using our repeatable project-management framework along with cutting-edge tools like the Correlation Analysis, Automated Machine Learning, and Feature Explanation as part of our ROI-Driven Data Science Curriculum.
 
+<a href="https://university.business-science.io/p/machine-learning-web-apps-level-1-bundle-r-track-courses-101-102-201"><img src="man/figures/README-3-course-system.jpg" width="100%" style="border-style: solid; border-width: 2px; border-color: #2c3e50"/></a>
+
 - [__Learn Data Science Foundations (DS4B 101-R)__](https://university.business-science.io/p/ds4b-101-r-business-analysis-r): Learn the entire `tidyverse` (`dplyr`, `ggplot2`, `rmarkdown`, &amp; more) and `parsnip` - Solve 2 Projects - Customer Segmentation and Price Optimization projects
 
 - [__Learn Advanced Machine Learning &amp; Business Consulting (DS4B 201-R)__](https://university.business-science.io/p/hr201-using-machine-learning-h2o-lime-to-predict-employee-turnover/): Churn Project solved with Correlation Analysis, `H2O` AutoML, `LIME` Feature Explanation, and ROI-driven Analysis / Recommendation Systems

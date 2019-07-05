@@ -237,7 +237,10 @@ projects.**
 Students learn by solving real world projects using our repeatable
 project-management framework along with cutting-edge tools like the
 Correlation Analysis, Automated Machine Learning, and Feature
-Explanation as part of our ROI-Driven Data Science Curriculum.
+Explanation as part of our ROI-Driven Data Science
+Curriculum.
+
+<a href="https://university.business-science.io/p/machine-learning-web-apps-level-1-bundle-r-track-courses-101-102-201"><img src="man/figures/README-3-course-system.jpg" width="100%" style="border-style: solid; border-width: 2px; border-color: #2c3e50"/></a>
 
   - [**Learn Data Science Foundations
     (DS4B 101-R)**](https://university.business-science.io/p/ds4b-101-r-business-analysis-r):
