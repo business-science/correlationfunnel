@@ -27,18 +27,18 @@ devtools::install_github("business-science/correlationfunnel")
 
 ## Correlation Funnel in 2-Minutes
 
-Exploratory data analysis (EDA) often involves looking at feature-target
-relationships independently. This usually involves creating lots of
-visualizations. But, there’s a better way…
+**Problem**: Exploratory data analysis (EDA) often involves looking at
+feature-target relationships independently. The problem is that this
+process of comparing feature after feature is very time consuming even
+for small data sets. Rather than search for relationships, what if we
+could let the relationships come to us?
 
-Yes - Enter `correlationfunnel`.
-
-The `correlationfunnel` package drastically speeds up EDA by providing a
-**succinct workflow** and **interactive visualization tools** for
-understanding which features have relationships to target (response).
-This is excellent for pre-modeling / pre-Machine Learning since you can
-determine quickly if you have predictive features (those with
-relationship to the target feature).
+**Solution:** Enter `correlationfunnel`. The package drastically speeds
+up EDA by providing a **succinct workflow** and **interactive
+visualization tools** for understanding which features have
+relationships to target (response). This is excellent for pre-modeling /
+pre-Machine Learning since you can determine quickly if you have
+predictive features (those with relationship to the target feature).
 
 ## Example - Bank Marketing Campaign
 
@@ -185,6 +185,8 @@ the lowest correlation features at the bottom. The resulting
 visualization looks like a Funnel.
 
 To produce the **Correlation Funnel**, use `plot_correlation_funnel()`.
+Try setting `interactive = TRUE` to get an interactive plot that can be
+zoomed in on.
 
 ``` r
 bank_marketing_campaign_correlated_tbl %>%
@@ -201,7 +203,7 @@ these.
 ``` r
 bank_marketing_campaign_correlated_tbl %>%
     filter(feature %in% c("DURATION", "POUTCOME", "CONTACT", "HOUSING")) %>%
-    plot_correlation_funnel(interactive = FALSE)
+    plot_correlation_funnel(interactive = FALSE, limits = c(-0.4, 0.4))
 ```
 
 <img src="man/figures/README-unnamed-chunk-6-1.png" width="100%" />
@@ -221,10 +223,11 @@ correlation with enrollment in the TERM DEPOSIT product:
 
 ## Usage in the Real-World
 
-[Business Science](https://www.business-science.io/) teaches students
-how to apply data science for business. The entire curriculum is crafted
-around business consulting with data science. Learn from us with
-real-world projects.
+[***Business Science***](https://www.business-science.io/) teaches
+students how to apply data science for business. The entire curriculum
+is crafted around business consulting with data science. **Learn from
+our data science application experience with real-world business
+projects.**
 
 ## Learn from Real-World Business Projects
 
@@ -233,19 +236,19 @@ project-management framework along with cutting-edge tools like the
 Correlation Analysis, Automated Machine Learning, and Feature
 Explanation as part of our ROI-Driven Data Science Curriculum.
 
-  - [Learn Data Science Foundations
-    (DS4B 101-R)](https://university.business-science.io/p/ds4b-101-r-business-analysis-r):
+  - [**Learn Data Science Foundations
+    (DS4B 101-R)**](https://university.business-science.io/p/ds4b-101-r-business-analysis-r):
     Learn the entire `tidyverse` (`dplyr`, `ggplot2`, `rmarkdown`, &
     more) and `parsnip` - Solve 2 Projects - Customer Segmentation and
     Price Optimization projects
 
-  - [Learn Advanced Machine Learning & Business Consulting
-    (DS4B 201-R)](https://university.business-science.io/p/hr201-using-machine-learning-h2o-lime-to-predict-employee-turnover/):
+  - [**Learn Advanced Machine Learning & Business Consulting
+    (DS4B 201-R)**](https://university.business-science.io/p/hr201-using-machine-learning-h2o-lime-to-predict-employee-turnover/):
     Churn Project solved with Correlation Analysis, `H2O` AutoML, `LIME`
     Feature Explanation, and ROI-driven Analysis / Recommendation
     Systems
 
-  - [Learn Predictive Web Application Development
-    (DS4B 102-R)](https://university.business-science.io/p/ds4b-102-r-shiny-web-application-business-level-1/):
+  - [**Learn Predictive Web Application Development
+    (DS4B 102-R)**](https://university.business-science.io/p/ds4b-102-r-shiny-web-application-business-level-1/):
     Build 2 Predictive `Shiny` Web Apps - Sales Dashboard with Demand
     Forecasting & Price Prediction App

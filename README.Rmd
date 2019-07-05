@@ -41,11 +41,11 @@ devtools::install_github("business-science/correlationfunnel")
 
 ## Correlation Funnel in 2-Minutes
 
-Exploratory data analysis (EDA) often involves looking at feature-target relationships independently. This usually involves creating lots of visualizations. But, there's a better way...
+__Problem__:
+Exploratory data analysis (EDA) often involves looking at feature-target relationships independently. The problem is that this process of comparing feature after feature is very time consuming even for small data sets. Rather than search for relationships, what if we could let the relationships come to us?
 
-Yes - Enter `correlationfunnel`. 
-
-The `correlationfunnel` package drastically speeds up EDA by providing a __succinct workflow__ and __interactive visualization tools__ for understanding which features have relationships to target (response). This is excellent for pre-modeling / pre-Machine Learning since you can determine quickly if you have predictive features (those with relationship to the target feature). 
+__Solution:__ 
+Enter `correlationfunnel`. The package drastically speeds up EDA by providing a __succinct workflow__ and __interactive visualization tools__ for understanding which features have relationships to target (response). This is excellent for pre-modeling / pre-Machine Learning since you can determine quickly if you have predictive features (those with relationship to the target feature). 
 
 ## Example - Bank Marketing Campaign
 
@@ -100,7 +100,7 @@ bank_marketing_campaign_correlated_tbl
 
 A __Correlation Funnel__ is an tornado plot that lists the highest correlation features (based on absolute magnitude) at the top of the and the lowest correlation features at the bottom. The resulting visualization looks like a Funnel. 
 
-To produce the __Correlation Funnel__, use `plot_correlation_funnel()`.
+To produce the __Correlation Funnel__, use `plot_correlation_funnel()`. Try setting `interactive = TRUE` to get an interactive plot that can be zoomed in on.
 
 ```{r, fig.height=8}
 bank_marketing_campaign_correlated_tbl %>%
@@ -112,10 +112,10 @@ bank_marketing_campaign_correlated_tbl %>%
 
 The most important features are towards the top. So we can investigate these.
 
-```{r}
+```{r, fig.height=4}
 bank_marketing_campaign_correlated_tbl %>%
     filter(feature %in% c("DURATION", "POUTCOME", "CONTACT", "HOUSING")) %>%
-    plot_correlation_funnel(interactive = FALSE)
+    plot_correlation_funnel(interactive = FALSE, limits = c(-0.4, 0.4))
 ```
 
 We can see that the following prospect groups have a much greater correlation with enrollment in the TERM DEPOSIT product:
@@ -130,7 +130,7 @@ We can see that the following prospect groups have a much greater correlation wi
 
 ## Usage in the Real-World
 
-[Business Science](https://www.business-science.io/) teaches students how to apply data science for business. The entire curriculum is crafted around business consulting with data science. Learn from us with real-world projects.
+[___Business Science___](https://www.business-science.io/) teaches students how to apply data science for business. The entire curriculum is crafted around business consulting with data science. __Learn from our data science application experience with real-world business projects.__
 
    
 
@@ -138,8 +138,8 @@ We can see that the following prospect groups have a much greater correlation wi
 
 Students learn by solving real world projects using our repeatable project-management framework along with cutting-edge tools like the Correlation Analysis, Automated Machine Learning, and Feature Explanation as part of our ROI-Driven Data Science Curriculum.
 
-- [Learn Data Science Foundations (DS4B 101-R)](https://university.business-science.io/p/ds4b-101-r-business-analysis-r): Learn the entire `tidyverse` (`dplyr`, `ggplot2`, `rmarkdown`, &amp; more) and `parsnip` - Solve 2 Projects - Customer Segmentation and Price Optimization projects
+- [__Learn Data Science Foundations (DS4B 101-R)__](https://university.business-science.io/p/ds4b-101-r-business-analysis-r): Learn the entire `tidyverse` (`dplyr`, `ggplot2`, `rmarkdown`, &amp; more) and `parsnip` - Solve 2 Projects - Customer Segmentation and Price Optimization projects
 
-- [Learn Advanced Machine Learning &amp; Business Consulting (DS4B 201-R)](https://university.business-science.io/p/hr201-using-machine-learning-h2o-lime-to-predict-employee-turnover/): Churn Project solved with Correlation Analysis, `H2O` AutoML, `LIME` Feature Explanation, and ROI-driven Analysis / Recommendation Systems
+- [__Learn Advanced Machine Learning &amp; Business Consulting (DS4B 201-R)__](https://university.business-science.io/p/hr201-using-machine-learning-h2o-lime-to-predict-employee-turnover/): Churn Project solved with Correlation Analysis, `H2O` AutoML, `LIME` Feature Explanation, and ROI-driven Analysis / Recommendation Systems
 
-- [Learn Predictive Web Application Development (DS4B 102-R)](https://university.business-science.io/p/ds4b-102-r-shiny-web-application-business-level-1/): Build 2 Predictive `Shiny` Web Apps - Sales Dashboard with Demand Forecasting &amp; Price Prediction App
+- [__Learn Predictive Web Application Development (DS4B 102-R)__](https://university.business-science.io/p/ds4b-102-r-shiny-web-application-business-level-1/): Build 2 Predictive `Shiny` Web Apps - Sales Dashboard with Demand Forecasting &amp; Price Prediction App
