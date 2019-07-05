@@ -69,7 +69,7 @@ plot_correlation_funnel.data.frame <- function(data,  interactive = TRUE, limits
 
             # Geometries
             ggplot2::geom_vline(xintercept = 0, linetype = 2, color = "red") +
-            ggplot2::geom_point(color = "#2c3e50") +
+            ggplot2::geom_point(color = "#2c3e50", alpha = alpha) +
             ggrepel::geom_text_repel(ggplot2::aes(label = bin), size = 3, color = "#2c3e50") +
 
             # Formatting
