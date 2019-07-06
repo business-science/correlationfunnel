@@ -10,7 +10,7 @@ plot_correlation_funnel(data, interactive = FALSE, limits = c(-1, 1),
 \arguments{
 \item{data}{A \code{tibble} or \code{data.frame}}
 
-\item{interactive}{Returns either an interactive (\code{plotly}) visualization or a static (\code{ggplot2}) visualization}
+\item{interactive}{Returns either a static (\code{ggplot2}) visualization or an interactive (\code{plotly}) visualization}
 
 \item{limits}{Sets the X-Axis limits for the correlation space}
 
