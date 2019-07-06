@@ -47,6 +47,27 @@ predictive features (those with relationship to the target feature).
 
 ## Example - Bank Marketing Campaign
 
+The following example showcases the power of **fast exploratory
+correlation analysis**. The goal of the analysis is to determine which
+features relate to the bank’s marketing campaign goal of having
+customers opt into a TERM DEPOSIT (financial product).
+
+We will see that using **3 functions**, we can quickly:
+
+1.  Transform the data into a binary format with `binarize()`
+
+2.  Perform correlation analysis using `correlate()`
+
+3.  Visualize the highest correlation features using
+    `plot_correlation_funnel()`
+
+**Result**: Rather than spend hours looking at individual plots of
+capaign features and comparing them to which customers opted in to the
+TERM DEPOSIT product, in seconds we can discover which groups of
+customers have enrolled, drastically speeding up EDA.
+
+### Getting Started
+
 First, load the libraries.
 
 ``` r
@@ -89,10 +110,10 @@ bank_marketing_campaign_tbl %>% glimpse()
 
 ### Response & Predictor Relationships
 
-Most modeling problems involve a response (Enrolled in `TERM_DEPOSIT`,
-yes/no) and predictors (AGE, JOB, MARITAL, etc). Our job is to determine
-which predictors are related to the response. We can do this through
-**Binary Correlation Analysis**.
+Modeling and Machine Learning problems often involve a response
+(Enrolled in `TERM_DEPOSIT`, yes/no) and many predictors (AGE, JOB,
+MARITAL, etc). Our job is to determine which predictors are related to
+the response. We can do this through **Binary Correlation Analysis**.
 
 ### Binary Correlation Analysis
 
@@ -106,6 +127,15 @@ value between the features and the response (target).
 The first step is converting the continuous and categorical data into
 binary (0/1) format. We de-select any non-predictive features. The
 `binarize()` function then converts the features into binary features.
+
+  - **Numeric Features:** Are binned into ranges or if few unique levels
+    are binned by their value, and then converted to binary features via
+    one-hot encoding
+
+  - **Categorical Features**: Are binned by one-hot encoding
+
+The result is a data frame that has only binary data with columns
+representing the bins that the observations fall into.
 
 ``` r
 bank_marketing_campaign_binarized_tbl <- bank_marketing_campaign_tbl %>%
@@ -202,7 +232,7 @@ bank_marketing_campaign_correlated_tbl %>%
 
 ### Examining the Results
 
-The most important features are towards the top. So we can investigate
+The most important features are towards the top. We can investigate
 these.
 
 ``` r

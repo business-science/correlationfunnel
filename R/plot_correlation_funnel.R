@@ -57,7 +57,8 @@ plot_correlation_funnel.data.frame <- function(data,  interactive = FALSE, limit
 
             # Formatting
             ggplot2::scale_x_continuous(limits = limits) +
-            theme_tq()
+            theme_tq() +
+            labs(title = "Correlation Funnel")
 
         p <- plotly::ggplotly(g, tooltip = "text")
 
@@ -74,7 +75,8 @@ plot_correlation_funnel.data.frame <- function(data,  interactive = FALSE, limit
 
             # Formatting
             ggplot2::scale_x_continuous(limits = limits) +
-            theme_tq()
+            theme_tq() +
+            labs(title = "Correlation Funnel")
 
         return(g)
     }

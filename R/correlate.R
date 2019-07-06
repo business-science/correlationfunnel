@@ -46,8 +46,13 @@ correlate.data.frame <- function(data, target, ...) {
     if (missing(target)) stop('Error in correlate(): argument "target" is missing, with no default', call. = FALSE)
 
     # Check all data is numeric
-    # TODO
+    col_types <- data %>%
+        purrr::map_df(class) %>%
+        tidyr::gather() %>%
+        dplyr::pull(value)
+    if (any(!(col_types %in% "numeric"))) stop('Error in correlate(): "data" contains non-numeric features.', call. = FALSE)
 
+    # Correlation logic
     target_expr <- rlang::enquo(target)
 
     y <- data %>% dplyr::pull(!! target_expr)
