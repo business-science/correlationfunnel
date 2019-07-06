@@ -5,7 +5,7 @@
 #'
 #'
 #' @param data A `tibble` or `data.frame`
-#' @param interactive Returns either an interactive (`plotly`) visualization or a static (`ggplot2`) visualization
+#' @param interactive Returns either a static (`ggplot2`) visualization or an interactive (`plotly`) visualization
 #' @param limits Sets the X-Axis limits for the correlation space
 #' @param alpha Sets the transparency of the points on the plot.
 #'
@@ -27,23 +27,23 @@
 #'
 #'
 #' @export
-plot_correlation_funnel <- function(data,  interactive = TRUE, limits = c(-1, 1), alpha = 1) {
+plot_correlation_funnel <- function(data,  interactive = FALSE, limits = c(-1, 1), alpha = 1) {
     UseMethod("plot_correlation_funnel", data)
 }
 
 #' @export
-plot_correlation_funnel.default <- function(data,  interactive = TRUE, limits = c(-1, 1), alpha = 1) {
+plot_correlation_funnel.default <- function(data,  interactive = FALSE, limits = c(-1, 1), alpha = 1) {
     stop("Error plot_correlation_funnel(): Object is not of class `data.frame`.", call. = FALSE)
 }
 
 #' @export
-plot_correlation_funnel.data.frame <- function(data,  interactive = TRUE, limits = c(-1, 1), alpha = 1) {
+plot_correlation_funnel.data.frame <- function(data,  interactive = FALSE, limits = c(-1, 1), alpha = 1) {
 
 
     if (interactive) {
 
         data <- data %>%
-            dplyr::mutate(label_text = stringr::str_glue("Feature: {feature}
+            dplyr::mutate(label_text = stringr::str_glue("{feature}
                                          Bin: {bin}
                                          Correlation: {round(correlation, 3)}"))
 

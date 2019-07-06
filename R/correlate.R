@@ -45,6 +45,9 @@ correlate.data.frame <- function(data, target, ...) {
     # Checks
     if (missing(target)) stop('Error in correlate(): argument "target" is missing, with no default', call. = FALSE)
 
+    # Check all data is numeric
+    # TODO
+
     target_expr <- rlang::enquo(target)
 
     y <- data %>% dplyr::pull(!! target_expr)

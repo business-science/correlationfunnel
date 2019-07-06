@@ -51,41 +51,72 @@ binarize.default <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq
 #' @export
 binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq = "OTHER") {
 
+    # Check & fix numeric factors
+    numeric_check_tbl <- data %>%
+        dplyr::select_if(is.numeric) %>%
+        dplyr::summarise_all(~ length(unique(.))) %>%
+        tidyr::gather() %>%
+        dplyr::arrange(dplyr::desc(value)) %>%
+        dplyr::mutate(check = dplyr::case_when(
+            value == 1 ~ "Zero Variance",
+            value < n_bins + 2 ~ "Possible Factor",
+            TRUE ~ "Pass"
+        ))
+
+    cols_num_to_factor <- numeric_check_tbl %>%
+        dplyr::filter(check == "Possible Factor") %>%
+        dplyr::pull(key)
+
+    data <- data %>%
+        dplyr::mutate_at(.vars = dplyr::vars(cols_num_to_factor), .funs = as.factor)
+
+    # Compute Binary Data
+    recipe_obj <- recipes::recipe(~ ., data = data) %>%
+        # Remove zero variance variables
+        recipes::step_zv(all_predictors()) %>%
+
+        # Reduce cardinality of infrequent categorical levels
+        recipes::step_other(
+            all_nominal(),
+            threshold = thresh_infreq,
+            other     = name_infreq) %>%
+
+        # Convert continuous features to binned features
+        recipes::step_discretize(
+            all_numeric(),
+            options = list(
+                cuts = n_bins,
+                min_unique = 1)
+        ) %>%
+
+        # Convert categorical and binned features to binary features
+        recipes::step_dummy(
+            all_nominal(),
+            one_hot = TRUE,
+            naming  = purrr::partial(recipes::dummy_names, sep = "__")) %>%
+
+        # Drop any features that have no variance
+        recipes::step_zv(all_predictors())
+
+    recipe_obj <- recipes::prep(recipe_obj)
+
+    # Output what happened
+    # removed_tbl <- tidy(recipe_obj, 1) %>% distinct(terms)
+    #
+    # tidy(recipe_obj, 2)
+    #
+    # discretized_tbl <- tidy(recipe_obj, 3) %>% distinct(terms)
+    #
+    # tidy(recipe_obj, 4) %>% distinct(terms)
+    #
+    # tidy(recipe_obj, 5)
+
+
+    data_transformed_tbl <- data %>%
+        recipes::bake(recipe_obj, new_data = .)
+
+    # Handle Names
     suppressWarnings({
-
-        # Compute Binary Data
-        recipe_obj <- recipes::recipe(~ ., data = data) %>%
-            # Remove zero variance variables
-            recipes::step_zv(all_predictors()) %>%
-
-            # Reduce cardinality of infrequent categorical levels
-            recipes::step_other(
-                all_nominal(),
-                threshold = thresh_infreq,
-                other     = name_infreq) %>%
-
-            # Convert continuous features to binned features
-            recipes::step_discretize(
-                all_numeric(),
-                options = list(
-                    cuts = n_bins,
-                    min_unique = 1)
-            ) %>%
-
-            # Convert categorical and binned features to binary features
-            recipes::step_dummy(
-                all_nominal(),
-                one_hot = TRUE,
-                naming  = purrr::partial(recipes::dummy_names, sep = "__")) %>%
-
-            # Drop any features that have no variance
-            recipes::step_zv(all_predictors()) %>%
-            recipes::prep()
-
-        data_transformed_tbl <- data %>%
-            recipes::bake(recipe_obj, new_data = .)
-
-        # Handle Names
         bin_labels_tbl <- recipes::tidy(recipe_obj) %>%
             dplyr::filter(type == "discretize") %>%
             dplyr::pull(number) %>%
@@ -108,9 +139,11 @@ binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_inf
                 is.na(label_new) ~ label_current,
                 TRUE ~ label_new)) %>%
             dplyr::select(label_current, label_new)
-
-        names(data_transformed_tbl) <- new_names_tbl$label_new
     })
+
+
+    names(data_transformed_tbl) <- new_names_tbl$label_new
+
 
     return(data_transformed_tbl)
 

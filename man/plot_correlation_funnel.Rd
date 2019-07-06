@@ -4,7 +4,7 @@
 \alias{plot_correlation_funnel}
 \title{Plot a Correlation Funnel}
 \usage{
-plot_correlation_funnel(data, interactive = TRUE, limits = c(-1, 1),
+plot_correlation_funnel(data, interactive = FALSE, limits = c(-1, 1),
   alpha = 1)
 }
 \arguments{
