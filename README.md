@@ -256,13 +256,40 @@ correlation with enrollment in the TERM DEPOSIT product:
 
   - When HOUSING, whether or not the contact has a HOME LOAN is “no”
 
+## Other Great EDA Packages in R
+
+The main addition of `correlationfunnel` is to quickly expose feature
+relationships to semi-processed data meaning missing (`NA`) values have
+been treated, date or date-time features have been feature engineered,
+and data is in a “clean” format (numeric data and categorical data are
+ready to be correlated to a Yes/No response).
+
+Here are several great EDA packages that can help you understand data
+issues (cleanliness) and get data preprared for Correlation Analysis\!
+
+  - [Data Explorer](https://boxuancui.github.io/DataExplorer/) -
+    Automates Exploration and Data Treatment. Amazing for investigating
+    features quickly and efficiently including by data type, missing
+    data, feature engineering, and identifying relationships.
+
+  - [naniar](http://naniar.njtierney.com/) - For understanding missing
+    data.
+
+  - [UpSetR](https://github.com/hms-dbmi/UpSetR) - For generating upset
+    plots
+
+  - [GGally](https://ggobi.github.io/ggally/) - The `ggpairs()` function
+    is one of my all-time favorites for visualizing many features
+    quickly.
+
 ## Usage in the Real-World
 
 [***Business Science***](https://www.business-science.io/) teaches
 students how to apply data science for business. The entire curriculum
-is crafted around business consulting with data science. **Learn from
-our data science application experience with real-world business
-projects.**
+is crafted around business consulting with data science. *Correlation
+Analysis* is one of the many techniques that we teach in our curriculum.
+**Learn from our data science application experience with real-world
+business projects.**
 
 ## Learn from Real-World Business Projects
 
