@@ -21,17 +21,17 @@ Imports:
     ggplot2,
     rlang,
     recipes,
-    magrittr
-Suggests:
-    stats,
-    utils,
+    magrittr,
+    plotly,
     tibble,
     dplyr,
-    plotly,
     tidyr,
+    stats,
+    utils,
     ggrepel,
     stringr,
     forcats,
     purrr
+Suggests:
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
