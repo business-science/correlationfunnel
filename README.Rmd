@@ -72,13 +72,13 @@ library(correlationfunnel)
 library(dplyr)
 ```
 
-Next, collect data to analyze. We'll use Marketing Campaign Data for a Bank that was popularized by the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Bank+Marketing). We can load the data with `data("bank_marketing_campaign_tbl")`.
+Next, collect data to analyze. We'll use Marketing Campaign Data for a Bank that was popularized by the [UCI Machine Learning Repository](https://archive.ics.uci.edu/ml/datasets/Bank+Marketing). We can load the data with `data("marketing_campaign_tbl")`.
 
 ```{r}
-# Use ?bank_marketing_campagin_tbl to get a description of the marketing campaign features
-data("bank_marketing_campaign_tbl")
+# Use ?marketing_campagin_tbl to get a description of the marketing campaign features
+data("marketing_campaign_tbl")
 
-bank_marketing_campaign_tbl %>% glimpse()
+marketing_campaign_tbl %>% glimpse()
 ```
 
 ### Response & Predictor Relationships
@@ -100,11 +100,11 @@ The first step is converting the continuous and categorical data into binary (0/
 The result is a data frame that has only binary data with columns representing the bins that the observations fall into. 
 
 ```{r}
-bank_marketing_campaign_binarized_tbl <- bank_marketing_campaign_tbl %>%
+marketing_campaign_binarized_tbl <- marketing_campaign_tbl %>%
     select(-ID) %>%
     binarize(n_bins = 4, thresh_infreq = 0.01)
 
-bank_marketing_campaign_binarized_tbl
+marketing_campaign_binarized_tbl
 ```
 
 #### Step 2: Perform Correlation Analysis
@@ -112,10 +112,10 @@ bank_marketing_campaign_binarized_tbl
 The second step is to perform a correlation analysis between the response (target = TERM_DEPOSIT_yes) and the rest of the features. This returns a specially formatted tibble with the feature, the bin, and the bin's correlation to the target. The format is exactly what we need for the next step - Producing the __Correlation Funnel__
 
 ```{r}
-bank_marketing_campaign_correlated_tbl <- bank_marketing_campaign_binarized_tbl %>%
+marketing_campaign_correlated_tbl <- marketing_campaign_binarized_tbl %>%
     correlate(target = TERM_DEPOSIT__yes)
 
-bank_marketing_campaign_correlated_tbl
+marketing_campaign_correlated_tbl
 ```
 
 #### Step 3: Visualize the Correlation Funnel
@@ -125,7 +125,7 @@ A __Correlation Funnel__ is an tornado plot that lists the highest correlation f
 To produce the __Correlation Funnel__, use `plot_correlation_funnel()`. Try setting `interactive = TRUE` to get an interactive plot that can be zoomed in on.
 
 ```{r, fig.height=8}
-bank_marketing_campaign_correlated_tbl %>%
+marketing_campaign_correlated_tbl %>%
     plot_correlation_funnel(interactive = FALSE)
 ```
 
@@ -135,7 +135,7 @@ bank_marketing_campaign_correlated_tbl %>%
 The most important features are towards the top. We can investigate these.
 
 ```{r, fig.height=3}
-bank_marketing_campaign_correlated_tbl %>%
+marketing_campaign_correlated_tbl %>%
     filter(feature %in% c("DURATION", "POUTCOME", "CONTACT", "HOUSING")) %>%
     plot_correlation_funnel(interactive = FALSE, limits = c(-0.4, 0.4))
 ```

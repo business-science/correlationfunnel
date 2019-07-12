@@ -79,13 +79,13 @@ Next, collect data to analyze. We’ll use Marketing Campaign Data for a
 Bank that was popularized by the [UCI Machine Learning
 Repository](https://archive.ics.uci.edu/ml/datasets/Bank+Marketing). We
 can load the data with
-`data("bank_marketing_campaign_tbl")`.
+`data("marketing_campaign_tbl")`.
 
 ``` r
-# Use ?bank_marketing_campagin_tbl to get a description of the marketing campaign features
-data("bank_marketing_campaign_tbl")
+# Use ?marketing_campagin_tbl to get a description of the marketing campaign features
+data("marketing_campaign_tbl")
 
-bank_marketing_campaign_tbl %>% glimpse()
+marketing_campaign_tbl %>% glimpse()
 #> Observations: 45,211
 #> Variables: 18
 #> $ ID           <chr> "2836", "2837", "2838", "2839", "2840", "2841", "28…
@@ -138,11 +138,11 @@ The result is a data frame that has only binary data with columns
 representing the bins that the observations fall into.
 
 ``` r
-bank_marketing_campaign_binarized_tbl <- bank_marketing_campaign_tbl %>%
+marketing_campaign_binarized_tbl <- marketing_campaign_tbl %>%
     select(-ID) %>%
     binarize(n_bins = 4, thresh_infreq = 0.01)
 
-bank_marketing_campaign_binarized_tbl
+marketing_campaign_binarized_tbl
 #> # A tibble: 45,211 x 65
 #>    `AGE__-Inf_33` AGE__33_39 AGE__39_48 AGE__48_Inf JOB__admin.
 #>             <dbl>      <dbl>      <dbl>       <dbl>       <dbl>
@@ -192,10 +192,10 @@ for the next step - Producing the **Correlation
 Funnel**
 
 ``` r
-bank_marketing_campaign_correlated_tbl <- bank_marketing_campaign_binarized_tbl %>%
+marketing_campaign_correlated_tbl <- marketing_campaign_binarized_tbl %>%
     correlate(target = TERM_DEPOSIT__yes)
 
-bank_marketing_campaign_correlated_tbl
+marketing_campaign_correlated_tbl
 #> # A tibble: 65 x 3
 #>    feature      bin      correlation
 #>    <fct>        <chr>          <dbl>
@@ -224,7 +224,7 @@ Try setting `interactive = TRUE` to get an interactive plot that can be
 zoomed in on.
 
 ``` r
-bank_marketing_campaign_correlated_tbl %>%
+marketing_campaign_correlated_tbl %>%
     plot_correlation_funnel(interactive = FALSE)
 ```
 
@@ -236,7 +236,7 @@ The most important features are towards the top. We can investigate
 these.
 
 ``` r
-bank_marketing_campaign_correlated_tbl %>%
+marketing_campaign_correlated_tbl %>%
     filter(feature %in% c("DURATION", "POUTCOME", "CONTACT", "HOUSING")) %>%
     plot_correlation_funnel(interactive = FALSE, limits = c(-0.4, 0.4))
 ```

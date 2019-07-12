@@ -19,7 +19,7 @@
 #' library(dplyr)
 #' library(correlationfunnel)
 #'
-#' bank_marketing_campaign_tbl %>%
+#' marketing_campaign_tbl %>%
 #'     select(-ID) %>%
 #'     binarize() %>%
 #'     correlate(TERM_DEPOSIT__yes) %>%

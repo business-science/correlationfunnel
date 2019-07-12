@@ -28,7 +28,7 @@ creation of the binary correlation analysis, which is the feed data for the \cod
 library(dplyr)
 library(correlationfunnel)
 
-bank_marketing_campaign_tbl \%>\%
+marketing_campaign_tbl \%>\%
     select(-ID) \%>\%
     binarize() \%>\%
     correlate(TERM_DEPOSIT__yes)

@@ -26,7 +26,7 @@ A static \code{ggplot2} plot or an interactive \code{plotly} plot
 library(dplyr)
 library(correlationfunnel)
 
-bank_marketing_campaign_tbl \%>\%
+marketing_campaign_tbl \%>\%
     select(-ID) \%>\%
     binarize() \%>\%
     correlate(TERM_DEPOSIT__yes) \%>\%

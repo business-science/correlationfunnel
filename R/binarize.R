@@ -7,6 +7,8 @@
 #' @param n_bins The number of bins to for converting continuous (numeric features) into discrete features (bins)
 #' @param thresh_infreq The threshold for converting categorical (character or factor features) into an "Other" Category.
 #' @param name_infreq The name for infrequently appearing categories to be lumped into. Set to "OTHER" by default.
+#' @param one_hot If set to `TRUE`, binarization returns number of new columns = number of levels.
+#' If `FALSE`, binarization returns number of new columns = number of levels - 1 (dummy encoding).
 #'
 #' @return A `tbl`
 #'
@@ -31,7 +33,7 @@
 #' library(dplyr)
 #' library(correlationfunnel)
 #'
-#' bank_marketing_campaign_tbl %>%
+#' marketing_campaign_tbl %>%
 #'     select(-ID) %>%
 #'     binarize()
 #'
@@ -39,60 +41,67 @@
 #' @importFrom recipes "all_nominal" "all_numeric" "all_predictors"
 #'
 #' @export
-binarize <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq = "OTHER") {
+binarize <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq = "OTHER", one_hot = TRUE) {
     UseMethod("binarize", data)
 }
 
 #' @export
-binarize.default <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq = "OTHER") {
+binarize.default <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq = "OTHER", one_hot = TRUE) {
     stop("Error binarize(): Object is not of class `data.frame`.", call. = FALSE)
 }
 
 #' @export
-binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq = "OTHER") {
+binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq = "OTHER", one_hot = TRUE) {
+
+    # CHECKS ----
+
+    # Check missing
+    check_missing(data, .fun_name = "binarize")
 
     # Check & fix numeric factors
-    numeric_check_tbl <- data %>%
-        dplyr::select_if(is.numeric) %>%
-        dplyr::summarise_all(~ length(unique(.))) %>%
-        tidyr::gather() %>%
-        dplyr::arrange(dplyr::desc(value)) %>%
-        dplyr::mutate(check = dplyr::case_when(
-            value == 1 ~ "Zero Variance",
-            value < n_bins + 2 ~ "Possible Factor",
-            TRUE ~ "Pass"
-        ))
+    #  - Numeric values with low cardinality (few unique) treated as categorical
+    data <- fix_low_cardinality_numeric(data, thresh = n_bins + 3)
 
-    cols_num_to_factor <- numeric_check_tbl %>%
-        dplyr::filter(check == "Possible Factor") %>%
-        dplyr::pull(key)
+    # Check & fix skewed data
+    # TODO
 
-    data <- data %>%
-        dplyr::mutate_at(.vars = dplyr::vars(cols_num_to_factor), .funs = as.factor)
+    # TRANSFORMATION STEPS ----
 
     # Compute Binary Data
+    num_count <- data %>% purrr::map_lgl(is.numeric) %>% sum()
+    cat_count <- (data %>% purrr::map_lgl(is.character) %>% sum()) +
+        (data %>% purrr::map_lgl(is.factor) %>% sum())
+
+    # Remove zero variance variables
     recipe_obj <- recipes::recipe(~ ., data = data) %>%
-        # Remove zero variance variables
-        recipes::step_zv(all_predictors()) %>%
+        recipes::step_zv(all_predictors())
 
-        # Reduce cardinality of infrequent categorical levels
-        recipes::step_other(
-            all_nominal(),
-            threshold = thresh_infreq,
-            other     = name_infreq) %>%
+    # Reduce cardinality of infrequent categorical levels
+    if (cat_count > 0) {
+        if (thresh_infreq == 0) thresh_infreq <- 1e-9 # Resolves error on thresh_infreq = 0
+        recipe_obj <- recipe_obj %>%
+            recipes::step_other(
+                all_nominal(),
+                threshold = thresh_infreq,
+                other     = name_infreq)
+    }
 
-        # Convert continuous features to binned features
-        recipes::step_discretize(
-            all_numeric(),
-            options = list(
-                cuts = n_bins,
-                min_unique = 1)
-        ) %>%
+    # Convert continuous features to binned features
+    if (num_count > 0) {
+        recipe_obj <- recipe_obj %>%
+            recipes::step_discretize(
+                all_numeric(),
+                options = list(
+                    cuts = n_bins,
+                    min_unique = 1)
+            )
+    }
 
-        # Convert categorical and binned features to binary features
+    # Convert categorical and binned features to binary features
+    recipe_obj <- recipe_obj %>%
         recipes::step_dummy(
             all_nominal(),
-            one_hot = TRUE,
+            one_hot = one_hot,
             naming  = purrr::partial(recipes::dummy_names, sep = "__")) %>%
 
         # Drop any features that have no variance
@@ -100,51 +109,97 @@ binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_inf
 
     recipe_obj <- recipes::prep(recipe_obj)
 
-    # Output what happened
-    # removed_tbl <- tidy(recipe_obj, 1) %>% distinct(terms)
-    #
-    # tidy(recipe_obj, 2)
-    #
-    # discretized_tbl <- tidy(recipe_obj, 3) %>% distinct(terms)
-    #
-    # tidy(recipe_obj, 4) %>% distinct(terms)
-    #
-    # tidy(recipe_obj, 5)
-
-
     data_transformed_tbl <- data %>%
         recipes::bake(recipe_obj, new_data = .)
 
-    # Handle Names
+    # HANDLE COLUMN NAMES ----
+
+    # Handle Numeric Bin Names
     suppressWarnings({
-        bin_labels_tbl <- recipes::tidy(recipe_obj) %>%
-            dplyr::filter(type == "discretize") %>%
-            dplyr::pull(number) %>%
+        if (num_count > 0) {
+            bin_labels_tbl <- recipes::tidy(recipe_obj) %>%
+                dplyr::filter(type == "discretize") %>%
+                dplyr::pull(number) %>%
 
-            # Get binary name labels
-            recipes::tidy(recipe_obj, .) %>%
-            dplyr::group_by(terms) %>%
-            dplyr::mutate(value_lead = dplyr::lead(value, n = 1)) %>%
-            dplyr::slice(-dplyr::n()) %>%
+                # Get binary name labels
+                recipes::tidy(recipe_obj, .) %>%
+                dplyr::group_by(terms) %>%
+                dplyr::mutate(value_lead = dplyr::lead(value, n = 1)) %>%
+                dplyr::slice(-dplyr::n()) %>%
 
-            dplyr::mutate(bin_label = stringr::str_glue("{value}_{value_lead}")) %>%
-            dplyr::select(-id, -dplyr::contains("value")) %>%
-            dplyr::mutate(bin = 1:(dplyr::n()) ) %>%
-            dplyr::mutate(label_current = stringr::str_glue("{terms}__bin{bin}")) %>%
-            dplyr::mutate(label_new = stringr::str_glue("{terms}__{bin_label}"))
+                dplyr::mutate(bin_label = stringr::str_glue("{value}_{value_lead}")) %>%
+                dplyr::select(-id, -dplyr::contains("value")) %>%
+                dplyr::mutate(bin = 1:(dplyr::n()) ) %>%
+                dplyr::mutate(label_current = stringr::str_glue("{terms}__bin{bin}")) %>%
+                dplyr::mutate(label_new = stringr::str_glue("{terms}__{bin_label}"))
 
-        new_names_tbl <- tibble::tibble(label_current = names(data_transformed_tbl)) %>%
-            dplyr::left_join(bin_labels_tbl, by = "label_current") %>%
-            dplyr::mutate(label_new = dplyr::case_when(
-                is.na(label_new) ~ label_current,
-                TRUE ~ label_new)) %>%
-            dplyr::select(label_current, label_new)
+            new_names_tbl <- tibble::tibble(label_current = names(data_transformed_tbl)) %>%
+                dplyr::left_join(bin_labels_tbl, by = "label_current") %>%
+                dplyr::mutate(label_new = dplyr::case_when(
+                    is.na(label_new) ~ label_current,
+                    TRUE ~ label_new)) %>%
+                dplyr::select(label_current, label_new)
+
+            names(data_transformed_tbl) <- new_names_tbl$label_new
+        }
+
     })
-
-
-    names(data_transformed_tbl) <- new_names_tbl$label_new
-
 
     return(data_transformed_tbl)
 
+}
+
+# Checks for missing values
+check_missing <- function(data, .fun_name = NULL) {
+
+    missing_summary_tbl <- data %>%
+        purrr::map_df(~ sum(is.na(.))) %>%
+        tidyr::gather(key = "feature", value = "count_na") %>%
+        dplyr::arrange(dplyr::desc(count_na))
+
+    if (sum(missing_summary_tbl$count_na) > 0) {
+        columns_with_na_values <- missing_summary_tbl %>%
+            dplyr::filter(count_na > 0) %>%
+            dplyr::pull(feature)
+
+        msg1 <- paste0(.fun_name, "(): ")
+        msg2 <- "[Missing Values Detected] The following columns contain NAs: "
+        msg3 <- paste0(columns_with_na_values, collapse = ", ")
+
+        msg  <- paste0(msg1, msg2, msg3)
+
+        stop(msg, call. = FALSE)
+    }
+
+}
+
+fix_low_cardinality_numeric <- function(data, thresh = 6, .fun_name = NULL) {
+
+    num_class <- data %>% purrr::map_lgl(is.numeric)
+
+    if (any(num_class)) {
+
+        numeric_check_tbl <- data %>%
+            dplyr::select_if(is.numeric) %>%
+            dplyr::summarise_all(~ length(unique(.))) %>%
+            tidyr::gather() %>%
+            dplyr::arrange(dplyr::desc(value)) %>%
+            dplyr::mutate(check = dplyr::case_when(
+                value == 1 ~ "Zero Variance",
+                value < thresh ~ "Possible Factor",
+                TRUE ~ "Pass"
+            ))
+
+        cols_num_to_factor <- numeric_check_tbl %>%
+            dplyr::filter(check == "Possible Factor") %>%
+            dplyr::pull(key)
+
+        if (length(cols_num_to_factor) > 0) {
+            data <- data %>%
+                dplyr::mutate_at(.vars = dplyr::vars(cols_num_to_factor), .funs = as.factor)
+        }
+
+    }
+
+    return(data)
 }
