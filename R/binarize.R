@@ -63,7 +63,7 @@ binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_inf
     data <- fix_low_cardinality_numeric(data, thresh = n_bins + 3)
 
     # Check & fix skewed data
-    # TODO
+    data <- fix_high_skew_numeric_data(data)
 
     # TRANSFORMATION STEPS ----
 
@@ -173,6 +173,7 @@ check_missing <- function(data, .fun_name = NULL) {
 
 }
 
+# Checks & Fixes Numeric Data that Should be factor (categorical)
 fix_low_cardinality_numeric <- function(data, thresh = 6, .fun_name = NULL) {
 
     num_class <- data %>% purrr::map_lgl(is.numeric)
@@ -202,4 +203,37 @@ fix_low_cardinality_numeric <- function(data, thresh = 6, .fun_name = NULL) {
     }
 
     return(data)
+}
+
+# Checks and fixes numeric data with high skew
+fix_high_skew_numeric_data <- function(data, thresh, other) {
+
+    num_class <- data %>% purrr::map_lgl(is.numeric)
+
+    if (any(num_class)) {
+
+        # Inspect feature distributions
+        column_quantiles_tbl <- data %>%
+            dplyr::select_if(is.numeric) %>%
+            purrr::map_df(stats::quantile)
+
+        # Count unique quantiles
+        column_unique_count_tbl <- column_quantiles_tbl %>%
+            purrr::map_df(~ length(unique(.))) %>%
+            tidyr::gather(key = "feature", value = "count_unique_quantile")
+
+        # If less than five, convert to factor
+        cols_num_to_factor <- column_unique_count_tbl %>%
+            dplyr::filter(count_unique_quantile < 5) %>%
+            dplyr::pull(feature)
+
+        if (length(cols_num_to_factor) > 0) {
+            data <- data %>%
+                dplyr::mutate_at(.vars = dplyr::vars(cols_num_to_factor), .funs = ~ as.factor(.))
+        }
+
+    }
+
+    return(data)
+
 }
