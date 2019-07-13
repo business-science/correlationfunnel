@@ -63,87 +63,27 @@ binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_inf
     data <- fix_low_cardinality_numeric(data, thresh = n_bins + 3)
 
     # Check & fix skewed data
-    data <- fix_high_skew_numeric_data(data)
+    # - Highly skewed data with quantile values of 4 of 5 are same
+    #   will be converted to factor
+    data <- fix_high_skew_numeric_data(data, n_bins = n_bins, unique_limit = 2)
 
     # TRANSFORMATION STEPS ----
-
-    # Compute Binary Data
-    num_count <- data %>% purrr::map_lgl(is.numeric) %>% sum()
-    cat_count <- (data %>% purrr::map_lgl(is.character) %>% sum()) +
-        (data %>% purrr::map_lgl(is.factor) %>% sum())
-
-    # Remove zero variance variables
-    recipe_obj <- recipes::recipe(~ ., data = data) %>%
-        recipes::step_zv(all_predictors())
-
-    # Reduce cardinality of infrequent categorical levels
-    if (cat_count > 0) {
-        if (thresh_infreq == 0) thresh_infreq <- 1e-9 # Resolves error on thresh_infreq = 0
-        recipe_obj <- recipe_obj %>%
-            recipes::step_other(
-                all_nominal(),
-                threshold = thresh_infreq,
-                other     = name_infreq)
-    }
-
-    # Convert continuous features to binned features
-    if (num_count > 0) {
-        recipe_obj <- recipe_obj %>%
-            recipes::step_discretize(
-                all_numeric(),
-                options = list(
-                    cuts = n_bins,
-                    min_unique = 1)
-            )
-    }
-
-    # Convert categorical and binned features to binary features
-    recipe_obj <- recipe_obj %>%
-        recipes::step_dummy(
-            all_nominal(),
-            one_hot = one_hot,
-            naming  = purrr::partial(recipes::dummy_names, sep = "__")) %>%
-
-        # Drop any features that have no variance
-        recipes::step_zv(all_predictors())
-
-    recipe_obj <- recipes::prep(recipe_obj)
+    recipe_obj <- create_recipe(
+        data          = data,
+        n_bins        = n_bins,
+        thresh_infreq = thresh_infreq,
+        name_infreq   = name_infreq,
+        one_hot       = one_hot)
 
     data_transformed_tbl <- data %>%
         recipes::bake(recipe_obj, new_data = .)
 
     # HANDLE COLUMN NAMES ----
+    data_transformed_tbl <- handle_binned_names(
+        data   = data_transformed_tbl,
+        recipe = recipe_obj)
 
-    # Handle Numeric Bin Names
-    suppressWarnings({
-        if (num_count > 0) {
-            bin_labels_tbl <- recipes::tidy(recipe_obj) %>%
-                dplyr::filter(type == "discretize") %>%
-                dplyr::pull(number) %>%
 
-                # Get binary name labels
-                recipes::tidy(recipe_obj, .) %>%
-                dplyr::group_by(terms) %>%
-                dplyr::mutate(value_lead = dplyr::lead(value, n = 1)) %>%
-                dplyr::slice(-dplyr::n()) %>%
-
-                dplyr::mutate(bin_label = stringr::str_glue("{value}_{value_lead}")) %>%
-                dplyr::select(-id, -dplyr::contains("value")) %>%
-                dplyr::mutate(bin = 1:(dplyr::n()) ) %>%
-                dplyr::mutate(label_current = stringr::str_glue("{terms}__bin{bin}")) %>%
-                dplyr::mutate(label_new = stringr::str_glue("{terms}__{bin_label}"))
-
-            new_names_tbl <- tibble::tibble(label_current = names(data_transformed_tbl)) %>%
-                dplyr::left_join(bin_labels_tbl, by = "label_current") %>%
-                dplyr::mutate(label_new = dplyr::case_when(
-                    is.na(label_new) ~ label_current,
-                    TRUE ~ label_new)) %>%
-                dplyr::select(label_current, label_new)
-
-            names(data_transformed_tbl) <- new_names_tbl$label_new
-        }
-
-    })
 
     return(data_transformed_tbl)
 
@@ -206,7 +146,7 @@ fix_low_cardinality_numeric <- function(data, thresh = 6, .fun_name = NULL) {
 }
 
 # Checks and fixes numeric data with high skew
-fix_high_skew_numeric_data <- function(data, thresh, other) {
+fix_high_skew_numeric_data <- function(data, n_bins, unique_limit) {
 
     num_class <- data %>% purrr::map_lgl(is.numeric)
 
@@ -222,12 +162,13 @@ fix_high_skew_numeric_data <- function(data, thresh, other) {
             purrr::map_df(~ length(unique(.))) %>%
             tidyr::gather(key = "feature", value = "count_unique_quantile")
 
-        # If less than five, convert to factor
+        # If less than three, convert to factor
         cols_num_to_factor <- column_unique_count_tbl %>%
-            dplyr::filter(count_unique_quantile < 5) %>%
+            dplyr::filter(count_unique_quantile <= unique_limit) %>%
             dplyr::pull(feature)
 
         if (length(cols_num_to_factor) > 0) {
+
             data <- data %>%
                 dplyr::mutate_at(.vars = dplyr::vars(cols_num_to_factor), .funs = ~ as.factor(.))
         }
@@ -236,4 +177,90 @@ fix_high_skew_numeric_data <- function(data, thresh, other) {
 
     return(data)
 
+}
+
+create_recipe <- function(data, n_bins, thresh_infreq, name_infreq, one_hot) {
+
+    # Compute Binary Data
+    num_count <- data %>% purrr::map_lgl(is.numeric) %>% sum()
+    cat_count <- (data %>% purrr::map_lgl(is.character) %>% sum()) +
+        (data %>% purrr::map_lgl(is.factor) %>% sum())
+
+    # Remove zero variance variables
+    recipe_obj <- recipes::recipe(~ ., data = data) %>%
+        recipes::step_zv(all_predictors())
+
+    # Reduce cardinality of infrequent categorical levels
+    if (cat_count > 0) {
+        if (thresh_infreq == 0) thresh_infreq <- 1e-9 # Resolves error on thresh_infreq = 0
+        recipe_obj <- recipe_obj %>%
+            recipes::step_other(
+                all_nominal(),
+                threshold = thresh_infreq,
+                other     = name_infreq)
+    }
+
+    # Convert continuous features to binned features
+    if (num_count > 0) {
+        recipe_obj <- recipe_obj %>%
+            recipes::step_discretize(
+                all_numeric(),
+                options = list(
+                    cuts = n_bins,
+                    min_unique = 1)
+            )
+    }
+
+    # Convert categorical and binned features to binary features
+    recipe_obj <- recipe_obj %>%
+        recipes::step_dummy(
+            all_nominal(),
+            one_hot = one_hot,
+            naming  = purrr::partial(recipes::dummy_names, sep = "__")) %>%
+
+        # Drop any features that have no variance
+        recipes::step_zv(all_predictors())
+
+    suppressWarnings(recipe_obj <- recipes::prep(recipe_obj))
+
+    return(recipe_obj)
+
+}
+
+# Handle Numeric Bin Names
+handle_binned_names <- function(data, recipe) {
+
+    num_count <- data %>% purrr::map_lgl(is.numeric) %>% sum()
+    suppressWarnings({
+        if (num_count > 0) {
+
+            bin_labels_tbl <- recipes::tidy(recipe) %>%
+                dplyr::filter(type == "discretize") %>%
+                dplyr::pull(number) %>%
+
+                # Get binary name labels
+                recipes::tidy(recipe, .) %>%
+                dplyr::group_by(terms) %>%
+                dplyr::mutate(value_lead = dplyr::lead(value, n = 1)) %>%
+                dplyr::slice(-dplyr::n()) %>%
+
+                dplyr::mutate(bin_label = stringr::str_glue("{value}_{value_lead}")) %>%
+                dplyr::select(-id, -dplyr::contains("value")) %>%
+                dplyr::mutate(bin = 1:(dplyr::n()) ) %>%
+                dplyr::mutate(label_current = stringr::str_glue("{terms}__bin{bin}")) %>%
+                dplyr::mutate(label_new = stringr::str_glue("{terms}__{bin_label}"))
+
+            new_names_tbl <- tibble::tibble(label_current = names(data)) %>%
+                dplyr::left_join(bin_labels_tbl, by = "label_current") %>%
+                dplyr::mutate(label_new = dplyr::case_when(
+                    is.na(label_new) ~ label_current,
+                    TRUE ~ label_new)) %>%
+                dplyr::select(label_current, label_new)
+
+            names(data) <- new_names_tbl$label_new
+        }
+
+    })
+
+    return(data)
 }
