@@ -97,14 +97,14 @@ The first step is converting the continuous and categorical data into binary (0/
 
 - __Categorical Features__: Are binned by one-hot encoding
 
-The result is a data frame that has only binary data with columns representing the bins that the observations fall into. 
+The result is a data frame that has only binary data with columns representing the bins that the observations fall into. Note that the output is shown in the `glimpse()` format. THere are now 80 columns that are binary (0/1).
 
 ```{r}
 marketing_campaign_binarized_tbl <- marketing_campaign_tbl %>%
     select(-ID) %>%
     binarize(n_bins = 4, thresh_infreq = 0.01)
 
-marketing_campaign_binarized_tbl
+marketing_campaign_binarized_tbl %>% glimpse()
 ```
 
 #### Step 2: Perform Correlation Analysis
