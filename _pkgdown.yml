@@ -1,0 +1,44 @@
+template:
+  params:
+    bootswatch: flatly
+    ganalytics: UA-76139189-1
+
+navbar:
+  title: "correlationfunnel"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Function Reference"
+      href: reference/index.html
+    - text: "Articles"
+      href: articles/index.html
+      menu:
+        - text: "Introducing Correlation Funnel"
+          href: articles/introducing_correlation_funnel.html
+        - text: "Key Considerations & FAQs"
+          href: articles/key_considerations.html
+    - text: "News"
+      href: news/index.html
+
+  right:
+    - icon: fa-github
+      href: https://github.com/business-science/correlationfunnel
+
+reference:
+  - title: General
+    contents:
+    - correlationfunnel-package
+  - title: Correlation Funnel Workflow
+    desc: __The main functions used to perform binary correlation analysis.__
+    contents:
+    - binarize
+    - correlate
+  - title: Visualization functions
+    desc: __Plotting utilities for visualizing the Correlation Funnel.__
+    contents:
+    - starts_with("plot_")
+  - title: Datasets
+    desc: Datasets that ship with `correlationfunnel`
+    contents:
+    - starts_with("customer")
+    - starts_with("marketing")
