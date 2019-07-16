@@ -79,9 +79,13 @@ binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_inf
         recipes::bake(recipe_obj, new_data = .)
 
     # HANDLE COLUMN NAMES ----
-    data_transformed_tbl <- handle_binned_names(
-        data   = data_transformed_tbl,
-        recipe = recipe_obj)
+    num_count <- data %>% purrr::map_lgl(is.numeric) %>% sum()
+    if (num_count > 0) {
+        data_transformed_tbl <- handle_binned_names(
+            data   = data_transformed_tbl,
+            recipe = recipe_obj)
+    }
+
 
 
 
@@ -212,11 +216,22 @@ create_recipe <- function(data, n_bins, thresh_infreq, name_infreq, one_hot) {
     }
 
     # Convert categorical and binned features to binary features
+    name_system <- function(var, lvl, ordinal = FALSE, sep = "__") {
+        if (!ordinal) {
+            lvl <- lvl %>%
+                stringr::str_trim() %>%
+                stringr::str_replace_all(" ", "_")
+            nms <- paste(var, lvl, sep = sep)
+        } else {
+            nms <- paste0(var, recipes::names0(length(lvl), sep))
+            }
+        nms
+    }
     recipe_obj <- recipe_obj %>%
         recipes::step_dummy(
             all_nominal(),
             one_hot = one_hot,
-            naming  = purrr::partial(recipes::dummy_names, sep = "__")) %>%
+            naming  = name_system) %>%
 
         # Drop any features that have no variance
         recipes::step_zv(all_predictors())
@@ -264,3 +279,5 @@ handle_binned_names <- function(data, recipe) {
 
     return(data)
 }
+
+

@@ -1,0 +1,134 @@
+---
+title: "Introducing Correlation Funnel"
+output: 
+  rmarkdown::html_vignette:
+    toc: TRUE
+vignette: >
+  %\VignetteIndexEntry{Introducing Correlation Funnel}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE,
+  dpi = 300
+)
+```
+
+> Speed Up Exploratory Data Analysis (EDA) with `correlationfunnel`
+
+The goal of `correlationfunnel` is to help data scientist's speed up [Exploratory Data Analysis (EDA)](https://en.wikipedia.org/wiki/Exploratory_data_analysis). EDA can be an incredibly time consuming process. 
+
+## Problem
+
+Traditional approaches to EDA are ___labor intense___ where the data scientist reviews each of the features (predictors) in the data set for relationship to the target (i.e. goal or response). This process of manually building many visualizations and searching for relationships can take hours.
+
+## Solution
+
+<img src="../man/figures/README-corr_funnel.png" width="35%" align="right" style="border-style: solid; border-width: 2px; border-color: #2c3e50; margin-left: 10px; "/>
+
+__Correlation Analysis__ on data that has been _preprocessed_ (more on this shortly) can drastically speed up EDA by identifying key features that relate to the target. The key is getting the features into the "right format". This is where `correlationfunnel` helps.
+
+The `correlationfunnel` package includes a ___streamlined 3-step process for preparing data  and performing visual Correlation Analysis___. The visualization produced uncovers insights by elevating high-correlation features and loweribng low-correlation features. The shape looks like a ___funnel___ (hence the name "Correlation Funnel"), making it very efficient to understand which features are most likely to provide business insights and lend well to a machine learning model. 
+
+
+## Correlation Funnel Process
+
+The Correlation Funnel process uses __3 functions__:
+
+1. Transform the data into a binary format with `binarize()` - This step prepares semi-processed data for an optimal format (binary) for correlation analysis
+
+2. Perform correlation analysis using `correlate()` - This step correlates the "binarized" data (binary features) with the target
+
+3. Visualize the feature-target relationships using `plot_correlation_funnel()` - This step produces the visualization from which we can get business insights
+
+## Example - Customer Churn
+
+We'll step through an example of understanding what features are related to Customer Churn. 
+
+Load the necessary libraries.
+
+```{r setup}
+library(correlationfunnel)
+library(dplyr)
+```
+
+Get the `customer_churn_tbl` dataset. The dataset contains a number of features related to a telecommunications company's customer-base and whether or not the customer has churned. The target is "Churn". 
+
+```{r}
+data("customer_churn_tbl")
+
+customer_churn_tbl %>% glimpse()
+```
+
+
+### Step 1 - Prepare Data as Binary Features
+
+We use the `binarize()` function to produce a feature set of binary (0/1) variables. Numeric data are binned (using `n_bins`) into categorical data, then all categorical data is one-hot encoded to produce binary features. To prevent low frequency categories (high cardinality categories) from increasing the dimensionality (width of the resulting data frame), we use `thresh_infreq = 0.01` and `name_infreq = "OTHER"` to group excess categories. 
+
+```{r}
+customer_churn_binarized_tbl <- customer_churn_tbl %>%
+  select(-customerID) %>%
+  mutate(TotalCharges = ifelse(is.na(TotalCharges), MonthlyCharges, TotalCharges)) %>%
+  binarize(n_bins = 5, thresh_infreq = 0.01, name_infreq = "OTHER", one_hot = TRUE)
+
+customer_churn_binarized_tbl
+```
+
+### Step 2 - Correlate to the Target
+
+Next, we use `correlate()` to correlate the binary features to a target (in our case Customer Churn).
+
+```{r}
+customer_churn_corr_tbl <- customer_churn_binarized_tbl %>%
+  correlate(Churn__Yes)
+
+customer_churn_corr_tbl
+```
+
+### Step 3 - Plot the Correlation Funnel
+
+Finally, we visualize the correlation using the `plot_correlation_funnel()` function.
+
+```{r, fig.height=12, fig.width=8, out.height="70%", out.width="70%", fig.align="center"}
+customer_churn_corr_tbl %>%
+  plot_correlation_funnel()
+```
+
+### Business Insights
+
+We can see that the following features are correlated with Churn:
+
+- "Month to Month" Contract Type
+- No Online Security
+- No Tech Support
+- Customer tenure less than 6 months
+- Fiber Optic internet service
+- Pays with electronic check
+
+We can also see that the following features are correlated with Staying (No Churn):
+
+- "Two Year" Contract Type
+- Customer Purchases Online Security
+- Customer Purchases Tech Support
+- Customer tenure greater than 60 months (5 years)
+- DSL internet service
+- Pays with automatic credit card
+
+We can then develop a strategy to retain high risk customers:
+
+- Promotions for 2 Year Contract, Online Security, and Tech Support
+- Loyalty Bonuses to incentivize tenure
+- Incentives for setting up an automatic credit card payment
+
+## Conclusion
+
+The `correlationfunnel` package provides a 3-step workflow that streamlines the EDA process, helps with feature selection, and improves the ease of obtaining Business Insights.
+
+## More Information
+
+To learn about the inner-workings of and key considerations for use of `correlationfunnel`, __please read the Key Considerations and FAQs__. 

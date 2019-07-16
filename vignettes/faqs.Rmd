@@ -1,0 +1,260 @@
+---
+title: "Key Considerations & Frequently Asked Questions (FAQ)"
+output: 
+  rmarkdown::html_vignette:
+    toc: TRUE
+vignette: >
+  %\VignetteIndexEntry{Key Considerations and FAQs)}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE,
+  dpi = 300,
+  out.width = "60%",
+  out.height = "60%",
+  fig.height = 4,
+  fig.width = 4,
+  fig.align = "center"
+)
+```
+
+
+
+
+# Key Considerations and FAQs
+
+The purpose of the Key Considerations and FAQs is to address questions that users have and to highlight key considerations before or after various steps in `correlationfunnel` process. 
+
+Libraries used. 
+
+```{r setup}
+library(correlationfunnel)
+library(dplyr)
+library(tibble)
+library(ggplot2)
+```
+
+## Key Considerations
+
+We recommend using the following best practices to get high performance with `correlationfunnel`:
+
+### Prior to Binarization Step
+
+1. __Clean the Data__ - Make sure categorical data and numeric data are cleaned to take care of any errors and missing values.
+
+2. __Perform Feature Engineering__ - Make sure useful information any text fields (e.g. description fields). Make sure date fields are converted to categorical data like day of the week. Use 
+
+3. __Discard Features Known to Have No Predictive Value__ - Example ID fields
+
+4. __Discard ALL Non-Numeric and Non-Categorial Data__ - Remove date or datetime features, generic discription fields. 
+
+5. __Sample Data if Large__ - Performance could become slow on large data sets (Many Features or Many Rows). 
+    - Start by sampling the data to reduce the row number. 
+    - Run the Correlation Funnel, and select the best features.
+    - Increase the rows with the best feature selections. 
+    - Re-run the Correlation Funnel on the shorter-width (columns), larger-height (rows) dataset. 
+    
+### Prior to Correlation Step
+
+1. __Address Data Imbalance__ - The correlation analysis is susceptible to data imbalance. Try reducing the number of majority class rows to get a proportion of 75% to 25% majority to minority class. 
+
+### After Plotting the Correlation Funnel
+
+1. __Garbage In, Garbage Out__ - Using the `correlationfunnel` package on data that has little relationship will _not_ yield good results. If you are not getting good results by following the afformentioned "Key Considerations", then your data may have little relationship. This is useful and a sign that you may need to collect better data. 
+
+2. __Something Bad Happened or You Think Something Good Should Have Happened__ - File an error on [GitHub]() if you have a question and you believe that `correlationfunnel` should be reporting something differently and/or has an error. 
+
+## FAQs
+
+### 1. How does the Correlation Funnel Find Relationships in Numeric Data? 
+
+The approach to numeric data is to bin. This works well when non-linear relationships are present at the expense of a slight loss in linear relationship identification. We'll see examples using synthetic data to illustrate this point. 
+
+#### 1.1 Linear Relationships
+
+Let's make some sample data for Sales versus a highly correlated Macroeconomic Predictor. 
+
+```{r}
+# Generate Data
+set.seed(1)
+linear_data <- tibble(
+  sales = rnorm(100, mean = 10, sd = 5) + seq(1, 200,length.out = 100),
+  macro_indicator = rnorm(100, mean = 1, sd = 2) + seq(5, 20, length.out = 100)
+  ) %>%
+  mutate_all(~round(., 2))
+
+# Plot Relationship
+linear_data %>%
+  ggplot(aes(macro_indicator, sales)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm") +
+  labs(title = "Data with Linear Relationship")
+  
+```
+
+We can see that the correlation between the two features is approximately 0.9.
+
+```{r}
+linear_data %>%
+  correlate(target = sales) 
+```
+
+What happens when we `binarize()`? What we want to know is which segment of the Macroeconomic Indicator is most correlated with the highest sales bin. 
+
+```{r}
+linear_data_corr_tbl <- linear_data %>%
+  binarize() %>%
+  correlate(sales__160.8075_Inf) 
+
+linear_data_corr_tbl
+```
+
+We can see that the best relationship between the highest sales bin is the highest macroeconomic indicator bin. The magnitude of the correlation is lower, but it's still relatively high at approximately 0.8. 
+
+When we visualize with `plot_correlation_funnel()`, the macroeconomic predictor trend shows up indicating the highest macroeconomic indicator bin is highly correlated with the highest sales bin. 
+
+```{r}
+linear_data_corr_tbl %>%
+  plot_correlation_funnel()
+```
+
+
+#### 1.2 Non-Linear Relationships
+
+The real beauty of the binning process is when ___nonlinear trends___ are present. Let's again make some synthetic data this time between sales and age of customer. 
+
+```{r}
+# Generate synthetic data
+set.seed(1)
+nonlinear_data <- tibble(
+  sales = c(
+    rnorm(100, mean = 10, sd = 25),
+    rnorm(100, mean = 50, sd = 100),
+    rnorm(100, mean = 2,  sd = 40)),
+  age = c(
+    runif(100, min = 20, max = 29),
+    runif(100, min = 30, max = 39),
+    runif(100, min = 39, max = 59)
+  )
+) %>%
+  mutate(
+    sales = ifelse(sales < 0, 0, sales) %>% round(2),
+    age   = floor(age)
+    )
+
+# Visualize the nonlinear relationship
+nonlinear_data %>%
+  ggplot(aes(age, sales)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm") +
+  labs(title = "Data with Non-Linear Relationship")
+```
+
+We can see that the age range between 30 and 37 has much larger sales than the other age ranges. However, a linear trendline is flat indicating essentially no linear relationship. 
+
+The correlation analysis on un-binned data similarly expresses the magnitude of the relationship at approximately 0. 
+
+```{r}
+nonlinear_data %>%
+  correlate(sales)
+```
+
+However, when we bin the data, the relationship is exposed. The bin age 31-36 has a 0.25 correlation, which is quite high for real data. This indicates predictive power. Below 25 at -0.18 is negatively correlated, and likewise above 46 is negatively correlated. This tells the story that the 30-36 age range is the most likely group to purchase products.  
+
+```{r}
+nonlinear_data_corr_tbl <- nonlinear_data %>%
+  binarize(n_bins = 5) %>%
+  correlate(sales__46.552_Inf) 
+
+nonlinear_data_corr_tbl
+```
+
+We can confirm the relationship visually using `plot_correlation_funnel()`.  
+
+```{r}
+nonlinear_data_corr_tbl %>%
+  plot_correlation_funnel()
+```
+
+### 2. What About Skewed Numeric Data? 
+
+Highly skewed numeric data is tricky because the binning strategy does not conform well to the traditional `quantile()` approach for cutting data into bins. One bin tends to dominate. 
+
+To get around this issue, the `binarize()` function attempts to cut using the `n_bins` value provided by you. 
+
+When data becomes highly skewed, meaning one numeric value dominates so much that virtually all values are this value, the cuts are iteratively reduced until only 2 bins are left. 
+
+At that point the algorithm converts the values to factors, and anything that is not in the majority class gets a class of "OTHER" (or the value you provide as `name_infreq`). 
+
+We'll show this process using skewed features in the `marketing_campaign_tbl` data that ships with `correlationfunnel`.
+
+```{r}
+data("marketing_campaign_tbl")
+
+marketing_campaign_tbl 
+```
+
+#### 2.1 Skewed Data
+
+The "CAMPAIGN" feature is skewed. It cannot be binned with 4 bins because the quantile has only 4 unique values (enough for 3 bins: 1-2, 2-3, 3-63). 
+
+```{r}
+marketing_campaign_tbl %>%
+  pull(CAMPAIGN) %>%
+  quantile()
+```
+
+We can see the skew visually. 
+
+```{r}
+marketing_campaign_tbl %>%
+  ggplot(aes(CAMPAIGN)) +
+  geom_histogram() +
+  labs(title = "Skewed Data")
+```
+
+
+We can see that `binarize()` recognizes this and bins accordingly. 
+
+```{r}
+marketing_campaign_tbl %>%
+  select(CAMPAIGN) %>%
+  binarize()
+```
+
+#### 2.2. Highly Skewed Data
+
+At some point, binning becomes impossible because only 2 values exist. Rather than drop the feature, `binarize()` converts it to a `factor()` and the one-hot encoding process takes over using the `thresh_infreq` argument for converting any low frequency factors to a generic "OTHER" category. 
+
+We can see that the "PDAYS" feature is highly skewed with almost all values are `-1`. 
+
+
+```{r}
+marketing_campaign_tbl %>%
+  pull(PDAYS) %>%
+  quantile()
+```
+
+We can see the high skew visually.
+
+```{r}
+marketing_campaign_tbl %>%
+  ggplot(aes(PDAYS)) +
+  geom_histogram() +
+  labs(title = "Highly Skewed Data")
+```
+
+We can see that `binarize()` converts this feature to categorical data then the categorical threshold takes over. Just specify the proportion of low frequency categories to retain. 
+
+```{r}
+marketing_campaign_tbl %>%
+  select(PDAYS) %>%
+  binarize()
+```
+

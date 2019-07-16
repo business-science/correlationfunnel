@@ -136,7 +136,8 @@ The most important features are towards the top. We can investigate these.
 
 ```{r, fig.height=3}
 marketing_campaign_correlated_tbl %>%
-    filter(feature %in% c("DURATION", "POUTCOME", "CONTACT", "HOUSING")) %>%
+    filter(feature %in% c("DURATION", "POUTCOME", "PDAYS", 
+                          "PREVIOUS", "CONTACT", "HOUSING")) %>%
     plot_correlation_funnel(interactive = FALSE, limits = c(-0.4, 0.4))
 ```
 
