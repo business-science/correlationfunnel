@@ -61,35 +61,51 @@ binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_inf
     # Check missing
     check_missing(data, .fun_name = "binarize")
 
-    # Check & fix numeric factors
-    #  - Numeric values with low cardinality (few unique) treated as categorical
-    data <- fix_low_cardinality_numeric(data, thresh = n_bins + 3)
+    # FIXES ----
 
-    # Check & fix skewed data
-    # - Highly skewed data with quantile values of 4 of 5 are same
-    #   will be converted to factor
-    data <- fix_high_skew_numeric_data(data, n_bins = n_bins, unique_limit = 2)
+    # Find & Isolate Binary Data
+    binary_split <- split_binary(data)
+    data <- binary_split[["not_binary_data"]]
+    data_binary <- binary_split[["binary_data"]]
 
-    # TRANSFORMATION STEPS ----
-    recipe_obj <- create_recipe(
-        data          = data,
-        n_bins        = n_bins,
-        thresh_infreq = thresh_infreq,
-        name_infreq   = name_infreq,
-        one_hot       = one_hot)
+    # NON-BINARY DATA ----
+    if (ncol(data) > 0) {
 
-    data_transformed_tbl <- data %>%
-        recipes::bake(recipe_obj, new_data = .)
+        # Check & fix numeric factors
+        #  - Numeric values with low cardinality (few unique) treated as categorical
+        data <- fix_low_cardinality_numeric(data, thresh = n_bins + 3)
 
-    # HANDLE COLUMN NAMES ----
-    num_count <- data %>% purrr::map_lgl(is.numeric) %>% sum()
-    if (num_count > 0) {
-        data_transformed_tbl <- handle_binned_names(
-            data   = data_transformed_tbl,
-            recipe = recipe_obj)
+        # Check & fix skewed data
+        # - Highly skewed data with quantile values of 4 of 5 are same
+        #   will be converted to factor
+        data <- fix_high_skew_numeric_data(data, n_bins = n_bins, unique_limit = 2)
+
+        # TRANSFORMATION STEPS ----
+        recipe_obj <- create_recipe(
+            data          = data,
+            n_bins        = n_bins,
+            thresh_infreq = thresh_infreq,
+            name_infreq   = name_infreq,
+            one_hot       = one_hot)
+
+        data_transformed_tbl <- data %>%
+            recipes::bake(recipe_obj, new_data = .)
+
+        # HANDLE COLUMN NAMES ----
+        num_count <- data %>% purrr::map_lgl(is.numeric) %>% sum()
+        if (num_count > 0) {
+            data_transformed_tbl <- handle_binned_names(
+                data   = data_transformed_tbl,
+                recipe = recipe_obj)
+        }
+
+        data <- data_transformed_tbl
     }
 
-    return(data_transformed_tbl)
+    # RECOMBINE ----
+    data <- dplyr::bind_cols(data_binary, data)
+
+    return(data)
 
 }
 
@@ -143,6 +159,30 @@ check_missing <- function(data, .fun_name = NULL) {
 
         stop(msg, call. = FALSE)
     }
+
+}
+
+# Checks and isolates any binary data
+split_binary <- function(data){
+
+    # Format logical data as numeric
+    data <- data %>%
+        dplyr::mutate_if(is.logical, as.numeric)
+
+    # Detect binary data
+    is.binary <- function(x) {
+        unique_vals <- unique(x)
+
+        all(unique_vals %in% c(0, 1))
+    }
+
+    binary_data <- data %>%
+        dplyr::select_if(is.binary)
+
+    not_binary_data <- data %>%
+        dplyr::select_if(~ !is.binary(.))
+
+    return(list("binary_data" = binary_data, "not_binary_data" = not_binary_data))
 
 }
 
@@ -260,7 +300,9 @@ create_recipe <- function(data, n_bins, thresh_infreq, name_infreq, one_hot) {
         recipes::step_dummy(
             all_nominal(),
             one_hot = one_hot,
-            naming  = name_system) %>%
+            # naming  = purrr::partial(recipes::dummy_names, sep = "__")
+            naming = name_system
+            ) %>%
 
         # Drop any features that have no variance
         recipes::step_zv(all_predictors())

@@ -5,7 +5,7 @@
 \title{Turn data with numeric, categorical features into binary data.}
 \usage{
 binarize(data, n_bins = 4, thresh_infreq = 0.01,
-  name_infreq = "OTHER", one_hot = TRUE)
+  name_infreq = "-OTHER", one_hot = TRUE)
 }
 \arguments{
 \item{data}{A \code{tibble} or \code{data.frame}}
@@ -14,7 +14,7 @@ binarize(data, n_bins = 4, thresh_infreq = 0.01,
 
 \item{thresh_infreq}{The threshold for converting categorical (character or factor features) into an "Other" Category.}
 
-\item{name_infreq}{The name for infrequently appearing categories to be lumped into. Set to "OTHER" by default.}
+\item{name_infreq}{The name for infrequently appearing categories to be lumped into. Set to "-OTHER" by default.}
 
 \item{one_hot}{If set to \code{TRUE}, binarization returns number of new columns = number of levels.
 If \code{FALSE}, binarization returns number of new columns = number of levels - 1 (dummy encoding).}
