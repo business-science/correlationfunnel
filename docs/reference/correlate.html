@@ -93,7 +93,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/introducing_correlation_funnel.html">Introducing Correlation Funnel</a>
+      <a href="../articles/introducing_correlation_funnel.html">Introducing Correlation Funnel - Customer Churn Example</a>
     </li>
     <li>
       <a href="../articles/key_considerations.html">Key Considerations &amp; FAQs</a>
@@ -176,22 +176,22 @@ creation of the binary correlation analysis, which is the feed data for the <cod
 <span class='no'>marketing_campaign_tbl</span> <span class='kw'>%&gt;%</span>
     <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(-<span class='no'>ID</span>) <span class='kw'>%&gt;%</span>
     <span class='fu'><a href='binarize.html'>binarize</a></span>() <span class='kw'>%&gt;%</span>
-    <span class='fu'>correlate</span>(<span class='no'>TERM_DEPOSIT__yes</span>)</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 74 x 3</span><span>
+    <span class='fu'>correlate</span>(<span class='no'>TERM_DEPOSIT__yes</span>)</div><div class='output co'>#&gt; # A tibble: 74 x 3
 #&gt;    feature      bin      correlation
-#&gt;    </span><span style='color: #555555;font-style: italic;'>&lt;fct&gt;</span><span>        </span><span style='color: #555555;font-style: italic;'>&lt;chr&gt;</span><span>          </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'> 1</span><span> TERM_DEPOSIT no            -</span><span style='color: #BB0000;'>1.000</span><span>
-#&gt; </span><span style='color: #555555;'> 2</span><span> TERM_DEPOSIT yes            1.000
-#&gt; </span><span style='color: #555555;'> 3</span><span> DURATION     319_Inf        0.318
-#&gt; </span><span style='color: #555555;'> 4</span><span> POUTCOME     success        0.307
-#&gt; </span><span style='color: #555555;'> 5</span><span> DURATION     -Inf_103      -</span><span style='color: #BB0000;'>0.191</span><span>
-#&gt; </span><span style='color: #555555;'> 6</span><span> PDAYS        -OTHER         0.167
-#&gt; </span><span style='color: #555555;'> 7</span><span> PDAYS        -1            -</span><span style='color: #BB0000;'>0.167</span><span>
-#&gt; </span><span style='color: #555555;'> 8</span><span> PREVIOUS     0             -</span><span style='color: #BB0000;'>0.167</span><span>
-#&gt; </span><span style='color: #555555;'> 9</span><span> POUTCOME     unknown       -</span><span style='color: #BB0000;'>0.167</span><span>
-#&gt; </span><span style='color: #555555;'>10</span><span> CONTACT      unknown       -</span><span style='color: #BB0000;'>0.151</span><span>
-#&gt; </span><span style='color: #555555;'># … with 64 more rows</span><span></div><div class='input'>
+#&gt;    &lt;fct&gt;        &lt;chr&gt;          &lt;dbl&gt;
+#&gt;  1 TERM_DEPOSIT no            -1.000
+#&gt;  2 TERM_DEPOSIT yes            1.000
+#&gt;  3 DURATION     319_Inf        0.318
+#&gt;  4 POUTCOME     success        0.307
+#&gt;  5 DURATION     -Inf_103      -0.191
+#&gt;  6 PDAYS        -OTHER         0.167
+#&gt;  7 PDAYS        -1            -0.167
+#&gt;  8 PREVIOUS     0             -0.167
+#&gt;  9 POUTCOME     unknown       -0.167
+#&gt; 10 CONTACT      unknown       -0.151
+#&gt; # … with 64 more rows</div><div class='input'>
 
-</div></span></pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

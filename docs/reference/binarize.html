@@ -93,7 +93,7 @@
   </a>
   <ul class="dropdown-menu" role="menu">
     <li>
-      <a href="../articles/introducing_correlation_funnel.html">Introducing Correlation Funnel</a>
+      <a href="../articles/introducing_correlation_funnel.html">Introducing Correlation Funnel - Customer Churn Example</a>
     </li>
     <li>
       <a href="../articles/key_considerations.html">Key Considerations &amp; FAQs</a>
@@ -193,44 +193,44 @@ The <code>binarize()</code> function converts these to binary features using a o
 
 <span class='no'>marketing_campaign_tbl</span> <span class='kw'>%&gt;%</span>
     <span class='fu'><a href='https://dplyr.tidyverse.org/reference/select.html'>select</a></span>(-<span class='no'>ID</span>) <span class='kw'>%&gt;%</span>
-    <span class='fu'>binarize</span>()</div><div class='output co'>#&gt; <span style='color: #555555;'># A tibble: 45,211 x 74</span><span>
+    <span class='fu'>binarize</span>()</div><div class='output co'>#&gt; # A tibble: 45,211 x 74
 #&gt;    `AGE__-Inf_33` AGE__33_39 AGE__39_48 AGE__48_Inf JOB__admin. `JOB__blue-coll…
-#&gt;             </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>      </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>       </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>            </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span>
-#&gt; </span><span style='color: #555555;'> 1</span><span>              0          0          0           1           0                0
-#&gt; </span><span style='color: #555555;'> 2</span><span>              0          0          1           0           0                0
-#&gt; </span><span style='color: #555555;'> 3</span><span>              1          0          0           0           0                0
-#&gt; </span><span style='color: #555555;'> 4</span><span>              0          0          1           0           0                1
-#&gt; </span><span style='color: #555555;'> 5</span><span>              1          0          0           0           0                0
-#&gt; </span><span style='color: #555555;'> 6</span><span>              0          1          0           0           0                0
-#&gt; </span><span style='color: #555555;'> 7</span><span>              1          0          0           0           0                0
-#&gt; </span><span style='color: #555555;'> 8</span><span>              0          0          1           0           0                0
-#&gt; </span><span style='color: #555555;'> 9</span><span>              0          0          0           1           0                0
-#&gt; </span><span style='color: #555555;'>10</span><span>              0          0          1           0           0                0
-#&gt; </span><span style='color: #555555;'># … with 45,201 more rows, and 68 more variables: JOB__entrepreneur </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   JOB__housemaid </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, JOB__management </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, JOB__retired </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   `JOB__self-employed` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, JOB__services </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, JOB__student </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   JOB__technician </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, JOB__unemployed </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, `JOB__-OTHER` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   MARITAL__divorced </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, MARITAL__married </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, MARITAL__single </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   EDUCATION__primary </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, EDUCATION__secondary </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   EDUCATION__tertiary </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, EDUCATION__unknown </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, DEFAULT__no </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   DEFAULT__yes </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, `BALANCE__-Inf_72` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, BALANCE__72_448 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   BALANCE__448_1428 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, BALANCE__1428_Inf </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, HOUSING__no </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   HOUSING__yes </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, LOAN__no </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, LOAN__yes </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   CONTACT__cellular </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, CONTACT__telephone </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, CONTACT__unknown </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   `DAY__-Inf_8` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, DAY__8_16 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, DAY__16_21 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, DAY__21_Inf </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   MONTH__apr </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, MONTH__aug </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, MONTH__feb </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, MONTH__jan </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   MONTH__jul </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, MONTH__jun </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, MONTH__mar </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, MONTH__may </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   MONTH__nov </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, MONTH__oct </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, MONTH__sep </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   `MONTH__-OTHER` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, `DURATION__-Inf_103` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, DURATION__103_180 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   DURATION__180_319 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, DURATION__319_Inf </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, `CAMPAIGN__-Inf_2` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   CAMPAIGN__2_3 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, CAMPAIGN__3_Inf </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, `PDAYS__-1` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   `PDAYS__-OTHER` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, PREVIOUS__0 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, PREVIOUS__1 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   PREVIOUS__2 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, PREVIOUS__3 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, PREVIOUS__4 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, PREVIOUS__5 </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   `PREVIOUS__-OTHER` </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, POUTCOME__failure </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, POUTCOME__other </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   POUTCOME__success </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, POUTCOME__unknown </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>, TERM_DEPOSIT__no </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span style='color: #555555;'>,
-#&gt; #   TERM_DEPOSIT__yes </span><span style='color: #555555;font-style: italic;'>&lt;dbl&gt;</span><span></div><div class='input'>
+#&gt;             &lt;dbl&gt;      &lt;dbl&gt;      &lt;dbl&gt;       &lt;dbl&gt;       &lt;dbl&gt;            &lt;dbl&gt;
+#&gt;  1              0          0          0           1           0                0
+#&gt;  2              0          0          1           0           0                0
+#&gt;  3              1          0          0           0           0                0
+#&gt;  4              0          0          1           0           0                1
+#&gt;  5              1          0          0           0           0                0
+#&gt;  6              0          1          0           0           0                0
+#&gt;  7              1          0          0           0           0                0
+#&gt;  8              0          0          1           0           0                0
+#&gt;  9              0          0          0           1           0                0
+#&gt; 10              0          0          1           0           0                0
+#&gt; # … with 45,201 more rows, and 68 more variables: JOB__entrepreneur &lt;dbl&gt;,
+#&gt; #   JOB__housemaid &lt;dbl&gt;, JOB__management &lt;dbl&gt;, JOB__retired &lt;dbl&gt;,
+#&gt; #   `JOB__self-employed` &lt;dbl&gt;, JOB__services &lt;dbl&gt;, JOB__student &lt;dbl&gt;,
+#&gt; #   JOB__technician &lt;dbl&gt;, JOB__unemployed &lt;dbl&gt;, `JOB__-OTHER` &lt;dbl&gt;,
+#&gt; #   MARITAL__divorced &lt;dbl&gt;, MARITAL__married &lt;dbl&gt;, MARITAL__single &lt;dbl&gt;,
+#&gt; #   EDUCATION__primary &lt;dbl&gt;, EDUCATION__secondary &lt;dbl&gt;,
+#&gt; #   EDUCATION__tertiary &lt;dbl&gt;, EDUCATION__unknown &lt;dbl&gt;, DEFAULT__no &lt;dbl&gt;,
+#&gt; #   DEFAULT__yes &lt;dbl&gt;, `BALANCE__-Inf_72` &lt;dbl&gt;, BALANCE__72_448 &lt;dbl&gt;,
+#&gt; #   BALANCE__448_1428 &lt;dbl&gt;, BALANCE__1428_Inf &lt;dbl&gt;, HOUSING__no &lt;dbl&gt;,
+#&gt; #   HOUSING__yes &lt;dbl&gt;, LOAN__no &lt;dbl&gt;, LOAN__yes &lt;dbl&gt;,
+#&gt; #   CONTACT__cellular &lt;dbl&gt;, CONTACT__telephone &lt;dbl&gt;, CONTACT__unknown &lt;dbl&gt;,
+#&gt; #   `DAY__-Inf_8` &lt;dbl&gt;, DAY__8_16 &lt;dbl&gt;, DAY__16_21 &lt;dbl&gt;, DAY__21_Inf &lt;dbl&gt;,
+#&gt; #   MONTH__apr &lt;dbl&gt;, MONTH__aug &lt;dbl&gt;, MONTH__feb &lt;dbl&gt;, MONTH__jan &lt;dbl&gt;,
+#&gt; #   MONTH__jul &lt;dbl&gt;, MONTH__jun &lt;dbl&gt;, MONTH__mar &lt;dbl&gt;, MONTH__may &lt;dbl&gt;,
+#&gt; #   MONTH__nov &lt;dbl&gt;, MONTH__oct &lt;dbl&gt;, MONTH__sep &lt;dbl&gt;,
+#&gt; #   `MONTH__-OTHER` &lt;dbl&gt;, `DURATION__-Inf_103` &lt;dbl&gt;, DURATION__103_180 &lt;dbl&gt;,
+#&gt; #   DURATION__180_319 &lt;dbl&gt;, DURATION__319_Inf &lt;dbl&gt;, `CAMPAIGN__-Inf_2` &lt;dbl&gt;,
+#&gt; #   CAMPAIGN__2_3 &lt;dbl&gt;, CAMPAIGN__3_Inf &lt;dbl&gt;, `PDAYS__-1` &lt;dbl&gt;,
+#&gt; #   `PDAYS__-OTHER` &lt;dbl&gt;, PREVIOUS__0 &lt;dbl&gt;, PREVIOUS__1 &lt;dbl&gt;,
+#&gt; #   PREVIOUS__2 &lt;dbl&gt;, PREVIOUS__3 &lt;dbl&gt;, PREVIOUS__4 &lt;dbl&gt;, PREVIOUS__5 &lt;dbl&gt;,
+#&gt; #   `PREVIOUS__-OTHER` &lt;dbl&gt;, POUTCOME__failure &lt;dbl&gt;, POUTCOME__other &lt;dbl&gt;,
+#&gt; #   POUTCOME__success &lt;dbl&gt;, POUTCOME__unknown &lt;dbl&gt;, TERM_DEPOSIT__no &lt;dbl&gt;,
+#&gt; #   TERM_DEPOSIT__yes &lt;dbl&gt;</div><div class='input'>
 
-</div></span></pre>
+</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="sidebar">
     <h2>Contents</h2>

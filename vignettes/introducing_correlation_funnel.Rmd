@@ -1,5 +1,5 @@
 ---
-title: "Introducing Correlation Funnel"
+title: "Introducing Correlation Funnel - Customer Churn Example"
 output: 
   rmarkdown::html_vignette:
     toc: TRUE
@@ -35,6 +35,14 @@ __Correlation Analysis__ on data that has been _preprocessed_ (more on this shor
 
 The `correlationfunnel` package includes a ___streamlined 3-step process for preparing data  and performing visual Correlation Analysis___. The visualization produced uncovers insights by elevating high-correlation features and loweribng low-correlation features. The shape looks like a ___funnel___ (hence the name "Correlation Funnel"), making it very efficient to understand which features are most likely to provide business insights and lend well to a machine learning model. 
 
+
+## Main Benefits
+
+1. __Speeds Up Exploratory Data Analysis__ - You can drastically increase the speed at which you perform Exploratory Data Analysis (EDA) by using Correlation Analysis to focus on key features (rather than investigating all features).
+
+2. __Improves Feature Selection__ - Using correlation to determine if you have good features prior to spending significant time developing Machine Learning Models.
+
+3. __Gets You To Business Insights Faster__ - Understanding how features are related to a target variable can help you develop the story in the data (aka business insights).
 
 ## Correlation Funnel Process
 

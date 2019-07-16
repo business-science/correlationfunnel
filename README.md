@@ -47,7 +47,15 @@ relationships to target (response). This is excellent for pre-modeling /
 pre-Machine Learning since you can determine quickly if you have
 predictive features (those with relationship to the target feature).
 
-## Example - Bank Marketing Campaign
+**Main Benefits**:
+
+1.  **Speeds Up Exploratory Data Analysis**
+
+2.  **Improves Feature Selection**
+
+3.  **Gets You To Business Insights Faster**
+
+## Example - Marketing Campaign
 
 The following example showcases the power of **fast exploratory
 correlation analysis**. The goal of the analysis is to determine which

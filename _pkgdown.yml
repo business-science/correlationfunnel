@@ -13,7 +13,7 @@ navbar:
     - text: "Articles"
       href: articles/index.html
       menu:
-        - text: "Introducing Correlation Funnel"
+        - text: "Introducing Correlation Funnel - Customer Churn Example"
           href: articles/introducing_correlation_funnel.html
         - text: "Key Considerations & FAQs"
           href: articles/key_considerations.html
