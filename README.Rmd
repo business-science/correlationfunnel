@@ -58,7 +58,7 @@ __Main Benefits__:
 
 3. __Gets You To Business Insights Faster__ 
 
-## Example - Marketing Campaign
+## Example - Bank Marketing Campaign
 
 The following example showcases the power of __fast exploratory correlation analysis__. The goal of the analysis is to determine which features relate to the bank's marketing campaign goal of having customers opt into a TERM DEPOSIT (financial product). 
 

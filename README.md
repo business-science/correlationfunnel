@@ -51,7 +51,7 @@ understanding which features have relationships to target (response).
 
 3.  **Gets You To Business Insights Faster**
 
-## Example - Marketing Campaign
+## Example - Bank Marketing Campaign
 
 The following example showcases the power of **fast exploratory
 correlation analysis**. The goal of the analysis is to determine which
