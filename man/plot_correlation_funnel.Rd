@@ -20,7 +20,8 @@ plot_correlation_funnel(data, interactive = FALSE, limits = c(-1, 1),
 A static \code{ggplot2} plot or an interactive \code{plotly} plot
 }
 \description{
-\code{plot_correlation_funnel} returns a correlation funnel visualization in either static (\code{ggplot2) or interactive (}plotly`) formats.
+\code{plot_correlation_funnel} returns a correlation funnel visualization in either static (\code{ggplot2}) or
+interactive (\code{plotly}) formats.
 }
 \examples{
 library(dplyr)

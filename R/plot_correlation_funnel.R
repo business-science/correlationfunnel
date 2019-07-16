@@ -1,6 +1,6 @@
 #' Plot a Correlation Funnel
 #'
-#' \code{plot_correlation_funnel} returns a correlation funnel visualization in either static (`ggplot2) or
+#' \code{plot_correlation_funnel} returns a correlation funnel visualization in either static (`ggplot2`) or
 #' interactive (`plotly`) formats.
 #'
 #'
