@@ -1,5 +1,5 @@
 ---
-title: "Key Considerations & Frequently Asked Questions (FAQ)"
+title: "Key Considerations and FAQs"
 output: 
   rmarkdown::html_vignette:
     toc: TRUE
@@ -25,10 +25,6 @@ knitr::opts_chunk$set(
 ```
 
 
-
-
-# Key Considerations and FAQs
-
 The purpose of the Key Considerations and FAQs is to address questions that users have and to highlight key considerations before or after various steps in `correlationfunnel` process. 
 
 Libraries used. 
@@ -38,6 +34,8 @@ library(correlationfunnel)
 library(dplyr)
 library(tibble)
 library(ggplot2)
+library(stringr)
+library(forcats)
 ```
 
 ## Key Considerations
@@ -84,7 +82,7 @@ Let's make some sample data for Sales versus a highly correlated Macroeconomic P
 # Generate Data
 set.seed(1)
 linear_data <- tibble(
-  sales = rnorm(100, mean = 10, sd = 5) + seq(1, 200,length.out = 100),
+  sales = rnorm(100, mean = 10, sd = 5) + seq(1, 200,length.out = 100) * 1e6,
   macro_indicator = rnorm(100, mean = 1, sd = 2) + seq(5, 20, length.out = 100)
   ) %>%
   mutate_all(~round(., 2))
@@ -94,6 +92,7 @@ linear_data %>%
   ggplot(aes(macro_indicator, sales)) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm") +
+  scale_y_continuous(labels = scales::dollar_format(scale = 1e-6, suffix = "M")) +
   labs(title = "Data with Linear Relationship")
   
 ```
@@ -110,7 +109,7 @@ What happens when we `binarize()`? What we want to know is which segment of the 
 ```{r}
 linear_data_corr_tbl <- linear_data %>%
   binarize() %>%
-  correlate(sales__160.8075_Inf) 
+  correlate(sales__150250005.6625_Inf) 
 
 linear_data_corr_tbl
 ```
@@ -153,6 +152,8 @@ nonlinear_data %>%
   ggplot(aes(age, sales)) +
   geom_point(alpha = 0.5) +
   geom_smooth(method = "lm") +
+  scale_y_continuous(labels = scales::dollar_format()) +
+  expand_limits(y = 300) +
   labs(title = "Data with Non-Linear Relationship")
 ```
 
@@ -179,7 +180,7 @@ We can confirm the relationship visually using `plot_correlation_funnel()`.
 
 ```{r}
 nonlinear_data_corr_tbl %>%
-  plot_correlation_funnel()
+  plot_correlation_funnel(limits = c(-0.2, 1))
 ```
 
 ### 2. What About Skewed Numeric Data? 
@@ -256,5 +257,105 @@ We can see that `binarize()` converts this feature to categorical data then the 
 marketing_campaign_tbl %>%
   select(PDAYS) %>%
   binarize()
+```
+
+### 3. How does the Correlation Funnel Work With Categorical Data?
+
+
+We've actually already seen this. The binarization processed when performed on numeric data converts the data to bins and then one-hot encodes the result. The bins are categories. 
+
+The process for categorical data works the same as for numeric (minus the binning process). 
+
+Let's take a categorical feature from our `marketing_campaign_tbl`.
+
+```{r}
+marketing_campaign_tbl %>%
+  select(EDUCATION)
+```
+
+#### 3.1 One-Hot Encoding vs Dummy Encoding
+
+The `binarize()` function uses ___One-Hot Encoding___ by default. The Dummy Encoding Method has a key flaw for _Correlation Analysis_ in that it does not show all of the categorical levels. This affects the _Correlation Funnel Plot_ causing loss of potentially highly correlated bins in the visualization. 
+
+___One-Hot Encoding___ is the process of converting a categorical feature into a series of binary features. The default in `binarize()` is to perform one-hot encoding, which returns the number of columns equal to the number of levels in the category. This creates a series of binary flags to use in the Correlation Analysis. 
+
+```{r}
+marketing_campaign_tbl %>%
+  select(EDUCATION) %>%
+  binarize(one_hot = TRUE)
+```
+
+Another popular method in statistical analysis is ___Dummy Encoding___. The only real difference is that the number of columns are equal to the number of levels minus 1. When zeros are present in each of the new columns (secondary, tertiary, unknown) such as in Row 9, the value means not secondary, tertiary, or unknown, which in turn means primary. 
+
+```{r}
+marketing_campaign_tbl %>%
+  select(EDUCATION) %>%
+  binarize(one_hot = FALSE)
+```
+
+
+#### 3.2 Reducing Dimensionality (Preventing Irrelevant Factor Levels)
+
+The `binarize()` function uses a parameter `thresh_infreq = 0.01` and `name_infreq = "OTHER"` to keep infrequent categories that add little value to the analysis from unnecessarily increasing dimensionality. 
+
+___Dimensionality Reduction___ is important for the correlation analysis. Categorical data can quickly get out of hand causing the width (number of columns) to increase, which is known as ___High Dimensionality___. The ___One-Hot Encoding___ process will add a lot of features if not kept in check. 
+
+High Dimensionality is a two-fold problem. First, having many features adds to the computation time to analyze data. This is particularly painful on large data sets (5M rows+). Second, adding infrequent features (low occurrance) typically adds little predictive value to the modeling process. 
+
+To prevent this High Dimensionality situation, the `binarize()` function contains a `thresh_infreq` argument that lumps infrequent categories together based on a threshold of proportion within the rows of the data. For example, a `thresh_infreq = 0.01` lumps any factors present in less than 1% of the data into a new category defined by `name_infreq = "-OTHER"` (you can change this name for the lumped category).
+
+Let's examine the "JOB" categorical feature from the `marketing_campaign_tbl`, which has 12 levels, one for the category of Job that the customer falls into. We can se that using `binarize()` creates 12 new features.  
+
+```{r}
+marketing_campaign_tbl %>%
+  select(JOB) %>%
+  binarize(thresh_infreq = 0) %>% 
+  glimpse()
+```
+
+
+
+Examining these features, not all are present frequenly. We can see that several features appear only 5% or less of the time. 
+
+```{r, fig.height=8, fig.width=5}
+marketing_campaign_tbl %>%
+  # Count Frequency
+  count(JOB) %>%
+  mutate(prop = n / sum(n)) %>%
+  
+  # Format columns for plot
+  mutate(JOB = as.factor(JOB) %>% fct_reorder(n)) %>%
+  mutate(label_text = str_glue("JOB: {JOB}
+                               Count: {n}
+                               Prop: {scales::percent(prop)}")) %>%
+  
+  # Creat viz
+  ggplot(aes(JOB, n)) +
+  geom_point(aes(size = n)) +
+  geom_segment(aes(yend = 0, xend = JOB)) +
+  geom_label(aes(label = label_text), size = 3, hjust = "inward") +
+  coord_flip() +
+  labs(title = "Frequency of Each Level in JOB Feature")
+```
+
+We can reduce the dimensionality of this feature by increasing the grouping to 6% using `thresh_infreq = 0.06`. Now the features with presence less than 6% are grouped into an "-OTHER" category.  
+
+```{r}
+marketing_campaign_tbl %>%
+  select(JOB) %>%
+  binarize(thresh_infreq = 0.06, name_infreq = "-OTHER") %>% 
+  glimpse()
+```
+
+
+#### 3.3 Assessing Correlations With Categorical Data
+
+Once the data has been One-Hot Encoded, Correlation Analysis proceeds as normal. 
+
+```{r, fig.height=8}
+marketing_campaign_tbl %>%
+  binarize(n_bins = 5, thresh_infreq = 0.06, name_infreq = "-OTHER") %>%
+  correlate(TERM_DEPOSIT__yes) %>%
+  plot_correlation_funnel(alpha = 0.7)
 ```
 
