@@ -6,7 +6,7 @@
 #' @param data A `tibble` or `data.frame`
 #' @param n_bins The number of bins to for converting continuous (numeric features) into discrete features (bins)
 #' @param thresh_infreq The threshold for converting categorical (character or factor features) into an "Other" Category.
-#' @param name_infreq The name for infrequently appearing categories to be lumped into. Set to "OTHER" by default.
+#' @param name_infreq The name for infrequently appearing categories to be lumped into. Set to "-OTHER" by default.
 #' @param one_hot If set to `TRUE`, binarization returns number of new columns = number of levels.
 #' If `FALSE`, binarization returns number of new columns = number of levels - 1 (dummy encoding).
 #'
@@ -41,19 +41,22 @@
 #' @importFrom recipes "all_nominal" "all_numeric" "all_predictors"
 #'
 #' @export
-binarize <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq = "OTHER", one_hot = TRUE) {
+binarize <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq = "-OTHER", one_hot = TRUE) {
     UseMethod("binarize", data)
 }
 
 #' @export
-binarize.default <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq = "OTHER", one_hot = TRUE) {
+binarize.default <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq = "-OTHER", one_hot = TRUE) {
     stop("Error binarize(): Object is not of class `data.frame`.", call. = FALSE)
 }
 
 #' @export
-binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq = "OTHER", one_hot = TRUE) {
+binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq = "-OTHER", one_hot = TRUE) {
 
     # CHECKS ----
+
+    # Check data is charater, factor, or numeric
+    check_data_type(data, .fun_name = "binarize")
 
     # Check missing
     check_missing(data, .fun_name = "binarize")
@@ -86,10 +89,36 @@ binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_inf
             recipe = recipe_obj)
     }
 
-
-
-
     return(data_transformed_tbl)
+
+}
+
+
+# SUPPORTING FUNCTIONS -----
+
+# Checks for missing values
+check_data_type <- function(data, .fun_name = NULL) {
+
+    classes_allowed <- c("numeric", "character", "factor", "ordered")
+
+    class_summary_tbl <- data %>%
+        purrr::map_df(~ class(.)[[1]]) %>%
+        tidyr::gather(key = "feature", value = "class") %>%
+        dplyr::mutate(unacceptable_class = !(class %in% classes_allowed))
+
+    if (sum(class_summary_tbl$unacceptable_class) > 0) {
+        columns_with_unnacceptable_classes <- class_summary_tbl %>%
+            dplyr::filter(unacceptable_class > 0) %>%
+            dplyr::pull(feature)
+
+        msg1 <- paste0(.fun_name, "(): ")
+        msg2 <- "[Unnacceptable Columns Detected] The following columns contain non-numeric or non-categorical data: "
+        msg3 <- paste0(columns_with_unnacceptable_classes, collapse = ", ")
+
+        msg  <- paste0(msg1, msg2, msg3)
+
+        stop(msg, call. = FALSE)
+    }
 
 }
 
@@ -245,35 +274,32 @@ create_recipe <- function(data, n_bins, thresh_infreq, name_infreq, one_hot) {
 # Handle Numeric Bin Names
 handle_binned_names <- function(data, recipe) {
 
-    num_count <- data %>% purrr::map_lgl(is.numeric) %>% sum()
     suppressWarnings({
-        if (num_count > 0) {
 
-            bin_labels_tbl <- recipes::tidy(recipe) %>%
-                dplyr::filter(type == "discretize") %>%
-                dplyr::pull(number) %>%
+        bin_labels_tbl <- recipes::tidy(recipe) %>%
+            dplyr::filter(type == "discretize") %>%
+            dplyr::pull(number) %>%
 
-                # Get binary name labels
-                recipes::tidy(recipe, .) %>%
-                dplyr::group_by(terms) %>%
-                dplyr::mutate(value_lead = dplyr::lead(value, n = 1)) %>%
-                dplyr::slice(-dplyr::n()) %>%
+            # Get binary name labels
+            recipes::tidy(recipe, .) %>%
+            dplyr::group_by(terms) %>%
+            dplyr::mutate(value_lead = dplyr::lead(value, n = 1)) %>%
+            dplyr::slice(-dplyr::n()) %>%
 
-                dplyr::mutate(bin_label = stringr::str_glue("{value}_{value_lead}")) %>%
-                dplyr::select(-id, -dplyr::contains("value")) %>%
-                dplyr::mutate(bin = 1:(dplyr::n()) ) %>%
-                dplyr::mutate(label_current = stringr::str_glue("{terms}__bin{bin}")) %>%
-                dplyr::mutate(label_new = stringr::str_glue("{terms}__{bin_label}"))
+            dplyr::mutate(bin_label = stringr::str_glue("{value}_{value_lead}")) %>%
+            dplyr::select(-id, -dplyr::contains("value")) %>%
+            dplyr::mutate(bin = 1:(dplyr::n()) ) %>%
+            dplyr::mutate(label_current = stringr::str_glue("{terms}__bin{bin}")) %>%
+            dplyr::mutate(label_new = stringr::str_glue("{terms}__{bin_label}"))
 
-            new_names_tbl <- tibble::tibble(label_current = names(data)) %>%
-                dplyr::left_join(bin_labels_tbl, by = "label_current") %>%
-                dplyr::mutate(label_new = dplyr::case_when(
-                    is.na(label_new) ~ label_current,
-                    TRUE ~ label_new)) %>%
-                dplyr::select(label_current, label_new)
+        new_names_tbl <- tibble::tibble(label_current = names(data)) %>%
+            dplyr::left_join(bin_labels_tbl, by = "label_current") %>%
+            dplyr::mutate(label_new = dplyr::case_when(
+                is.na(label_new) ~ label_current,
+                TRUE ~ label_new)) %>%
+            dplyr::select(label_current, label_new)
 
-            names(data) <- new_names_tbl$label_new
-        }
+        names(data) <- new_names_tbl$label_new
 
     })
 
