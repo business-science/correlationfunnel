@@ -63,10 +63,10 @@ binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_inf
 
     # FIXES ----
 
-    # Find & Isolate Binary Data
-    binary_split <- split_binary(data)
-    data <- binary_split[["not_binary_data"]]
-    data_binary <- binary_split[["binary_data"]]
+    # # Find & Isolate Binary Data
+    # binary_split <- split_binary(data)
+    # data <- binary_split[["not_binary_data"]]
+    # data_binary <- binary_split[["binary_data"]]
 
     # NON-BINARY DATA ----
     if (ncol(data) > 0) {
@@ -102,8 +102,8 @@ binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_inf
         data <- data_transformed_tbl
     }
 
-    # RECOMBINE ----
-    data <- dplyr::bind_cols(data_binary, data)
+    ## RECOMBINE ----
+    #data <- dplyr::bind_cols(data_binary, data)
 
     return(data)
 
