@@ -43,6 +43,8 @@ correlate.default <- function(data, target, ...) {
 correlate.data.frame <- function(data, target, ...) {
 
     # Checks
+
+    # Check missing
     if (missing(target)) stop('Error in correlate(): argument "target" is missing, with no default', call. = FALSE)
 
     # Check all data is numeric
@@ -57,6 +59,9 @@ correlate.data.frame <- function(data, target, ...) {
 
     y <- data %>% dplyr::pull(!! target_expr)
 
+    # Check data balance
+    if (is.binary(y)) check_imbalance(y, thresh = 0.05, .col_name = rlang::quo_name(target_expr), .fun_name = "correlate")
+
     data %>%
         stats::cor(y = y, ...) %>%
         tibble::as_tibble(rownames = "feature") %>%
@@ -66,4 +71,28 @@ correlate.data.frame <- function(data, target, ...) {
         dplyr::arrange(abs(correlation) %>% dplyr::desc()) %>%
         dplyr::mutate(feature = forcats::as_factor(feature) %>% forcats::fct_rev())
 
+}
+
+# is.binary function - Checks if vector is binary
+is.binary <- function(x) {
+    unique_vals <- unique(x)
+
+    all(unique_vals %in% c(0, 1))
+}
+
+# Check data imbalance
+check_imbalance <- function(x, thresh, .col_name, .fun_name) {
+
+    prop_x <- sum(x) / length(x)
+
+    if (prop_x < thresh) {
+
+        msg1 <- paste0(.fun_name, "(): ")
+        msg2 <- paste0("[Data Imbalance Detected] Consider Sampling to balance the classes more than ", scales::percent(thresh))
+        msg3 <- paste0("\n  Column with imbalance: ", .col_name)
+
+        msg  <- paste0(msg1, msg2, msg3)
+
+        warning(msg, call. = FALSE)
+    }
 }

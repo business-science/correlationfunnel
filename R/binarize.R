@@ -169,13 +169,6 @@ split_binary <- function(data){
     data <- data %>%
         dplyr::mutate_if(is.logical, as.numeric)
 
-    # Detect binary data
-    is.binary <- function(x) {
-        unique_vals <- unique(x)
-
-        all(unique_vals %in% c(0, 1))
-    }
-
     binary_data <- data %>%
         dplyr::select_if(is.binary)
 
