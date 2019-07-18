@@ -18,7 +18,8 @@ knitr::opts_chunk$set(
 devtools::load_all()
 library(tidyverse)
 ```
-# correlationfunnel
+
+# correlationfunnel <img src="man/figures/logo-correlationfunnel.png" width="147" height="170" align="right" />
 _by [Business Science](https://www.business-science.io/)_
 
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
