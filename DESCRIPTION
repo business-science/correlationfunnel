@@ -31,7 +31,10 @@ Imports:
     ggrepel,
     stringr,
     forcats,
-    purrr
+    purrr,
+    cli,
+    crayon,
+    rstudioapi
 Suggests:
     scales,
     knitr,
