@@ -163,21 +163,21 @@ check_missing <- function(data, .fun_name = NULL) {
 }
 
 # Checks and isolates any binary data
-split_binary <- function(data){
-
-    # Format logical data as numeric
-    data <- data %>%
-        dplyr::mutate_if(is.logical, as.numeric)
-
-    binary_data <- data %>%
-        dplyr::select_if(is.binary)
-
-    not_binary_data <- data %>%
-        dplyr::select_if(~ !is.binary(.))
-
-    return(list("binary_data" = binary_data, "not_binary_data" = not_binary_data))
-
-}
+# split_binary <- function(data){
+#
+#     # Format logical data as numeric
+#     data <- data %>%
+#         dplyr::mutate_if(is.logical, as.numeric)
+#
+#     binary_data <- data %>%
+#         dplyr::select_if(is.binary)
+#
+#     not_binary_data <- data %>%
+#         dplyr::select_if(~ !is.binary(.))
+#
+#     return(list("binary_data" = binary_data, "not_binary_data" = not_binary_data))
+#
+# }
 
 # Checks & Fixes Numeric Data that Should be factor (categorical)
 fix_low_cardinality_numeric <- function(data, thresh = 6, .fun_name = NULL) {

@@ -38,7 +38,10 @@ Imports:
 Suggests:
     scales,
     knitr,
-    rmarkdown
+    rmarkdown,
+    covr,
+    lubridate,
+    testthat (>= 2.1.0)
 RoxygenNote: 6.1.1
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr
