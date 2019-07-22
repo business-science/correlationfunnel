@@ -1,3 +1,8 @@
+
+# correlationfunnel 0.1.0
+
+* Initial CRAN Submission
+
 # correlationfunnel 0.0.9
 
 * Package under development
