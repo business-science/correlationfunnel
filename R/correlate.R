@@ -52,10 +52,11 @@ correlate.data.frame <- function(data, target, ...) {
 
     # Extract target
     target_expr <- rlang::enquo(target)
+    target_name <- rlang::quo_name(target_expr)
     y <- data %>% dplyr::pull(!! target_expr)
 
     # Check data balance
-    if (is.binary(y)) check_imbalance(y, thresh = 0.05, .col_name = rlang::quo_name(target_expr), .fun_name = "correlate")
+    if (is.binary(y)) check_imbalance(x = y, thresh = 0.05, .col_name = target_name, .fun_name = "correlate")
 
     # Correlation logic
     data_transformed_tbl <- data %>%
@@ -93,4 +94,5 @@ check_imbalance <- function(x, thresh, .col_name, .fun_name) {
 
         warning(msg, call. = FALSE)
     }
+
 }

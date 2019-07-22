@@ -33,12 +33,17 @@ plot_correlation_funnel <- function(data,  interactive = FALSE, limits = c(-1, 1
 
 #' @export
 plot_correlation_funnel.default <- function(data,  interactive = FALSE, limits = c(-1, 1), alpha = 1) {
-    stop("Error plot_correlation_funnel(): Object is not of class `data.frame`.", call. = FALSE)
+    stop("plot_correlation_funnel(): Object is not of class `data.frame`.", call. = FALSE)
 }
 
 #' @export
 plot_correlation_funnel.data.frame <- function(data,  interactive = FALSE, limits = c(-1, 1), alpha = 1) {
 
+    # Checks
+    check_column_names(
+        data,
+        acceptable_column_names = c("feature", "bin", "correlation"),
+        .fun_name = "plot_correlation_funnel")
 
     if (interactive) {
 
@@ -81,4 +86,18 @@ plot_correlation_funnel.data.frame <- function(data,  interactive = FALSE, limit
         return(g)
     }
 
+}
+
+# Check column names of data
+check_column_names <- function(data, acceptable_column_names, .fun_name) {
+
+    if (any(!(names(data) %in% acceptable_column_names))) {
+
+        msg1 <- paste0(.fun_name, "(): ")
+        msg2 <- paste0("[Unnacceptable Data] Acceptable data is generated from the output of correlate().")
+
+        msg  <- paste0(msg1, msg2)
+
+        stop(msg, call. = FALSE)
+    }
 }
