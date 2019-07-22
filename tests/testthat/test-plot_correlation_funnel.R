@@ -20,6 +20,8 @@ marketing_correlated_tbl <- marketing_campaign_tbl %>%
 
 g <- plot_correlation_funnel(marketing_correlated_tbl)
 
+p <- plot_correlation_funnel(marketing_correlated_tbl, interactive = TRUE)
+
 # 2.0 TESTS ----
 
 # 2.1 Check Data & Class Types ----
@@ -32,7 +34,10 @@ test_that("Check bad column names", {
 })
 
 # 2.2 Check output of plot_correlation_funnel()
-test_that("Check bad column names", {
+test_that("Check ggplot", {
     expect_true(any(class(g) %in% "ggplot"))
 })
 
+test_that("Check plotly", {
+    expect_true(any(class(p) %in% "plotly"))
+})
