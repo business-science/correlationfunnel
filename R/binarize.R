@@ -56,7 +56,9 @@ binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_inf
     # CHECKS ----
 
     # Check data is charater, factor, or numeric
-    check_data_type(data, .fun_name = "binarize")
+    check_data_type(data,
+                    classes_allowed = c("numeric", "character", "factor", "ordered"),
+                    .fun_name = "binarize")
 
     # Check missing
     check_missing(data, .fun_name = "binarize")
@@ -113,9 +115,7 @@ binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_inf
 # SUPPORTING FUNCTIONS -----
 
 # Checks for missing values
-check_data_type <- function(data, .fun_name = NULL) {
-
-    classes_allowed <- c("numeric", "character", "factor", "ordered")
+check_data_type <- function(data, classes_allowed = c("numeric", "character", "factor", "ordered"), .fun_name = NULL) {
 
     class_summary_tbl <- data %>%
         purrr::map_df(~ class(.)[[1]]) %>%
@@ -128,7 +128,14 @@ check_data_type <- function(data, .fun_name = NULL) {
             dplyr::pull(feature)
 
         msg1 <- paste0(.fun_name, "(): ")
-        msg2 <- "[Unnacceptable Columns Detected] The following columns contain non-numeric or non-categorical data: "
+        if (.fun_name == "binarize") {
+            bad_types <- "non-numeric or non-categorical"
+        } else if (.fun_name == "correlate") {
+            bad_types <- "non-numeric"
+        } else {
+            bad_types <- "bad"
+        }
+        msg2 <- stringr::str_glue("[Unnacceptable Columns Detected] The following columns contain {bad_types} data types: ")
         msg3 <- paste0(columns_with_unnacceptable_classes, collapse = ", ")
 
         msg  <- paste0(msg1, msg2, msg3)

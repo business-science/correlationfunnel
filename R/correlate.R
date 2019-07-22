@@ -42,27 +42,23 @@ correlate.default <- function(data, target, ...) {
 #' @export
 correlate.data.frame <- function(data, target, ...) {
 
-    # Checks
-
     # Check missing
     if (missing(target)) stop('Error in correlate(): argument "target" is missing, with no default', call. = FALSE)
 
     # Check all data is numeric
-    col_types <- data %>%
-        purrr::map_df(class) %>%
-        tidyr::gather() %>%
-        dplyr::pull(value)
-    if (any(!(col_types %in% "numeric"))) stop('Error in correlate(): "data" contains non-numeric features.', call. = FALSE)
+    check_data_type(data,
+                    classes_allowed = "numeric",
+                    .fun_name = "correlate")
 
-    # Correlation logic
+    # Extract target
     target_expr <- rlang::enquo(target)
-
     y <- data %>% dplyr::pull(!! target_expr)
 
     # Check data balance
     if (is.binary(y)) check_imbalance(y, thresh = 0.05, .col_name = rlang::quo_name(target_expr), .fun_name = "correlate")
 
-    data %>%
+    # Correlation logic
+    data_transformed_tbl <- data %>%
         stats::cor(y = y, ...) %>%
         tibble::as_tibble(rownames = "feature") %>%
         dplyr::rename(correlation = V1) %>%
@@ -70,6 +66,8 @@ correlate.data.frame <- function(data, target, ...) {
         dplyr::filter(!is.na(correlation)) %>%
         dplyr::arrange(abs(correlation) %>% dplyr::desc()) %>%
         dplyr::mutate(feature = forcats::as_factor(feature) %>% forcats::fct_rev())
+
+    return(data_transformed_tbl)
 
 }
 
@@ -88,7 +86,7 @@ check_imbalance <- function(x, thresh, .col_name, .fun_name) {
     if (prop_x < thresh) {
 
         msg1 <- paste0(.fun_name, "(): ")
-        msg2 <- paste0("[Data Imbalance Detected] Consider Sampling to balance the classes more than ", scales::percent(thresh))
+        msg2 <- paste0("[Data Imbalance Detected] Consider sampling to balance the classes more than ", scales::percent(thresh))
         msg3 <- paste0("\n  Column with imbalance: ", .col_name)
 
         msg  <- paste0(msg1, msg2, msg3)

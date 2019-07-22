@@ -24,7 +24,6 @@ test_that("Check non-data frame throws error", {
 
 test_that("Check data types", {
 
-    # msg <- "binarize(): [Unnacceptable Columns Detected] The following columns contain non-numeric or non-categorical data: date, b"
     expect_error({
         bad_tbl %>%
             binarize()
