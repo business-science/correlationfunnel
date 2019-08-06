@@ -6,11 +6,11 @@
 \alias{correlationfunnel-package}
 \title{correlationfunnel: Speed Up Exploratory Data Analysis (EDA) with the Correlation Funnel}
 \description{
-The 'correlationfunnel' package drastically speeds up Exploratory Data Analysis (EDA)
+Speeds up exploratory data analysis (EDA)
     by providing a succinct workflow and interactive visualization tools for understanding
-    which features have relationships to target (response). This is excellent for pre-modeling / 
-    pre-Machine Learning since you can determine quickly if you have predictive features, 
-    those with relationship to the target feature.
+    which features have relationships to target (response). Uses binary correlation analysis
+    to determine relationship. Default correlation method is the Pearson method. 
+    Lian Duan, W Nick Street, Yanchi Liu, Songhua Xu, and Brook Wu (2014) <doi:10.1145/2637484>.
 }
 \seealso{
 Useful links:

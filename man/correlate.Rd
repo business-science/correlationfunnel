@@ -23,6 +23,10 @@ A \code{tbl}
 The \code{correlate()} function provides a convient wrapper around the \link[stats]{cor} function where the \code{target}
 is the column containing the Y variable. The function is intended to be used with \code{\link[=binarize]{binarize()}}, which enables
 creation of the binary correlation analysis, which is the feed data for the \code{\link[=plot_correlation_funnel]{plot_correlation_funnel()}} visualization.
+
+The default method is the Pearson correlation, which is the Correlation Coefficient from L. Duan et al., 2014.
+This represents the linear relationship between two dichotomous features (binary variables).
+Learn more about the binary correlation approach in the Vignette covering the Methodology, Key Considerations and FAQs.
 }
 \examples{
 library(dplyr)
@@ -34,6 +38,11 @@ marketing_campaign_tbl \%>\%
     correlate(TERM_DEPOSIT__yes)
 
 
+}
+\references{
+Lian Duan, W. Nick Street, Yanchi Liu, Songhua Xu, and Brook Wu. 2014. Selecting the right correlation
+measure for binary data. ACM Trans. Knowl. Discov. Data 9, 2, Article 13 (September 2014), 28 pages.
+DOI: http://dx.doi.org/10.1145/2637484
 }
 \seealso{
 \code{\link[=binarize]{binarize()}}, \code{\link[=plot_correlation_funnel]{plot_correlation_funnel()}}

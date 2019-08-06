@@ -7,3 +7,6 @@
 ^cran-comments\.md$
 ^_pkgdown\.yml$
 ^docs$
+^CRAN-RELEASE$
+^doc$
+^Meta$

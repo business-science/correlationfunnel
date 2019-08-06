@@ -73,7 +73,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">correlationfunnel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -163,6 +163,15 @@
     <p>The <code>correlate()</code> function provides a convient wrapper around the <a href='https://www.rdocumentation.org/packages/stats/topics/cor'>cor</a> function where the <code>target</code>
 is the column containing the Y variable. The function is intended to be used with <code><a href='binarize.html'>binarize()</a></code>, which enables
 creation of the binary correlation analysis, which is the feed data for the <code><a href='plot_correlation_funnel.html'>plot_correlation_funnel()</a></code> visualization.</p>
+<p>The default method is the Pearson correlation, which is the Correlation Coefficient from L. Duan et al., 2014.
+This represents the linear relationship between two dichotomous features (binary variables).
+Learn more about the binary correlation approach in the Vignette covering the Methodology, Key Considerations and FAQs.</p>
+    
+    <h2 class="hasAnchor" id="references"><a class="anchor" href="#references"></a>References</h2>
+
+    <p>Lian Duan, W. Nick Street, Yanchi Liu, Songhua Xu, and Brook Wu. 2014. Selecting the right correlation
+measure for binary data. ACM Trans. Knowl. Discov. Data 9, 2, Article 13 (September 2014), 28 pages.
+DOI: http://dx.doi.org/10.1145/2637484</p>
     
     <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
@@ -189,7 +198,7 @@ creation of the binary correlation analysis, which is the feed data for the <cod
 #&gt; </span><span style='color: #555555;'> 8</span><span> PREVIOUS     0             -</span><span style='color: #BB0000;'>0.167</span><span>
 #&gt; </span><span style='color: #555555;'> 9</span><span> POUTCOME     unknown       -</span><span style='color: #BB0000;'>0.167</span><span>
 #&gt; </span><span style='color: #555555;'>10</span><span> CONTACT      unknown       -</span><span style='color: #BB0000;'>0.151</span><span>
-#&gt; </span><span style='color: #555555;'># ... with 64 more rows</span><span></div><div class='input'>
+#&gt; </span><span style='color: #555555;'># … with 64 more rows</span><span></div><div class='input'>
 
 </div></span></pre>
   </div>
@@ -201,6 +210,8 @@ creation of the binary correlation analysis, which is the feed data for the <cod
       <li><a href="#value">Value</a></li>
 
       <li><a href="#details">Details</a></li>
+
+      <li><a href="#references">References</a></li>
 
       <li><a href="#see-also">See also</a></li>
       

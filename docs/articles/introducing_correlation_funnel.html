@@ -36,7 +36,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">correlationfunnel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -136,118 +136,118 @@
 <a href="#example---customer-churn" class="anchor"></a>Example - Customer Churn</h2>
 <p>We’ll step through an example of understanding what features are related to Customer Churn.</p>
 <p>Load the necessary libraries.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(correlationfunnel)</a>
-<a class="sourceLine" id="cb1-2" title="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(correlationfunnel)</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)</a></code></pre></div>
 <p>Get the <code>customer_churn_tbl</code> dataset. The dataset contains a number of features related to a telecommunications company’s customer-base and whether or not the customer has churned. The target is “Churn”.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"customer_churn_tbl"</span>)</a>
-<a class="sourceLine" id="cb2-2" title="2"></a>
-<a class="sourceLine" id="cb2-3" title="3">customer_churn_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">glimpse</span>()</a>
-<a class="sourceLine" id="cb2-4" title="4"><span class="co">#&gt; Observations: 7,043</span></a>
-<a class="sourceLine" id="cb2-5" title="5"><span class="co">#&gt; Variables: 21</span></a>
-<a class="sourceLine" id="cb2-6" title="6"><span class="co">#&gt; $ customerID       &lt;chr&gt; "7590-VHVEG", "5575-GNVDE", "3668-QPYBK", "77...</span></a>
-<a class="sourceLine" id="cb2-7" title="7"><span class="co">#&gt; $ gender           &lt;chr&gt; "Female", "Male", "Male", "Male", "Female", "...</span></a>
-<a class="sourceLine" id="cb2-8" title="8"><span class="co">#&gt; $ SeniorCitizen    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, ...</span></a>
-<a class="sourceLine" id="cb2-9" title="9"><span class="co">#&gt; $ Partner          &lt;chr&gt; "Yes", "No", "No", "No", "No", "No", "No", "N...</span></a>
-<a class="sourceLine" id="cb2-10" title="10"><span class="co">#&gt; $ Dependents       &lt;chr&gt; "No", "No", "No", "No", "No", "No", "Yes", "N...</span></a>
-<a class="sourceLine" id="cb2-11" title="11"><span class="co">#&gt; $ tenure           &lt;dbl&gt; 1, 34, 2, 45, 2, 8, 22, 10, 28, 62, 13, 16, 5...</span></a>
-<a class="sourceLine" id="cb2-12" title="12"><span class="co">#&gt; $ PhoneService     &lt;chr&gt; "No", "Yes", "Yes", "No", "Yes", "Yes", "Yes"...</span></a>
-<a class="sourceLine" id="cb2-13" title="13"><span class="co">#&gt; $ MultipleLines    &lt;chr&gt; "No phone service", "No", "No", "No phone ser...</span></a>
-<a class="sourceLine" id="cb2-14" title="14"><span class="co">#&gt; $ InternetService  &lt;chr&gt; "DSL", "DSL", "DSL", "DSL", "Fiber optic", "F...</span></a>
-<a class="sourceLine" id="cb2-15" title="15"><span class="co">#&gt; $ OnlineSecurity   &lt;chr&gt; "No", "Yes", "Yes", "Yes", "No", "No", "No", ...</span></a>
-<a class="sourceLine" id="cb2-16" title="16"><span class="co">#&gt; $ OnlineBackup     &lt;chr&gt; "Yes", "No", "Yes", "No", "No", "No", "Yes", ...</span></a>
-<a class="sourceLine" id="cb2-17" title="17"><span class="co">#&gt; $ DeviceProtection &lt;chr&gt; "No", "Yes", "No", "Yes", "No", "Yes", "No", ...</span></a>
-<a class="sourceLine" id="cb2-18" title="18"><span class="co">#&gt; $ TechSupport      &lt;chr&gt; "No", "No", "No", "Yes", "No", "No", "No", "N...</span></a>
-<a class="sourceLine" id="cb2-19" title="19"><span class="co">#&gt; $ StreamingTV      &lt;chr&gt; "No", "No", "No", "No", "No", "Yes", "Yes", "...</span></a>
-<a class="sourceLine" id="cb2-20" title="20"><span class="co">#&gt; $ StreamingMovies  &lt;chr&gt; "No", "No", "No", "No", "No", "Yes", "No", "N...</span></a>
-<a class="sourceLine" id="cb2-21" title="21"><span class="co">#&gt; $ Contract         &lt;chr&gt; "Month-to-month", "One year", "Month-to-month...</span></a>
-<a class="sourceLine" id="cb2-22" title="22"><span class="co">#&gt; $ PaperlessBilling &lt;chr&gt; "Yes", "No", "Yes", "No", "Yes", "Yes", "Yes"...</span></a>
-<a class="sourceLine" id="cb2-23" title="23"><span class="co">#&gt; $ PaymentMethod    &lt;chr&gt; "Electronic check", "Mailed check", "Mailed c...</span></a>
-<a class="sourceLine" id="cb2-24" title="24"><span class="co">#&gt; $ MonthlyCharges   &lt;dbl&gt; 29.85, 56.95, 53.85, 42.30, 70.70, 99.65, 89....</span></a>
-<a class="sourceLine" id="cb2-25" title="25"><span class="co">#&gt; $ TotalCharges     &lt;dbl&gt; 29.85, 1889.50, 108.15, 1840.75, 151.65, 820....</span></a>
-<a class="sourceLine" id="cb2-26" title="26"><span class="co">#&gt; $ Churn            &lt;chr&gt; "No", "No", "Yes", "No", "Yes", "Yes", "No", ...</span></a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"customer_churn_tbl"</span>)</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2"></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">customer_churn_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4"><span class="co">#&gt; Observations: 7,043</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5"><span class="co">#&gt; Variables: 21</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6"><span class="co">#&gt; $ customerID       &lt;chr&gt; "7590-VHVEG", "5575-GNVDE", "3668-QPYBK", "7795…</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7"><span class="co">#&gt; $ gender           &lt;chr&gt; "Female", "Male", "Male", "Male", "Female", "Fe…</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8"><span class="co">#&gt; $ SeniorCitizen    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,…</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9"><span class="co">#&gt; $ Partner          &lt;chr&gt; "Yes", "No", "No", "No", "No", "No", "No", "No"…</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10"><span class="co">#&gt; $ Dependents       &lt;chr&gt; "No", "No", "No", "No", "No", "No", "Yes", "No"…</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="co">#&gt; $ tenure           &lt;dbl&gt; 1, 34, 2, 45, 2, 8, 22, 10, 28, 62, 13, 16, 58,…</span></a>
+<a class="sourceLine" id="cb2-12" data-line-number="12"><span class="co">#&gt; $ PhoneService     &lt;chr&gt; "No", "Yes", "Yes", "No", "Yes", "Yes", "Yes", …</span></a>
+<a class="sourceLine" id="cb2-13" data-line-number="13"><span class="co">#&gt; $ MultipleLines    &lt;chr&gt; "No phone service", "No", "No", "No phone servi…</span></a>
+<a class="sourceLine" id="cb2-14" data-line-number="14"><span class="co">#&gt; $ InternetService  &lt;chr&gt; "DSL", "DSL", "DSL", "DSL", "Fiber optic", "Fib…</span></a>
+<a class="sourceLine" id="cb2-15" data-line-number="15"><span class="co">#&gt; $ OnlineSecurity   &lt;chr&gt; "No", "Yes", "Yes", "Yes", "No", "No", "No", "Y…</span></a>
+<a class="sourceLine" id="cb2-16" data-line-number="16"><span class="co">#&gt; $ OnlineBackup     &lt;chr&gt; "Yes", "No", "Yes", "No", "No", "No", "Yes", "N…</span></a>
+<a class="sourceLine" id="cb2-17" data-line-number="17"><span class="co">#&gt; $ DeviceProtection &lt;chr&gt; "No", "Yes", "No", "Yes", "No", "Yes", "No", "N…</span></a>
+<a class="sourceLine" id="cb2-18" data-line-number="18"><span class="co">#&gt; $ TechSupport      &lt;chr&gt; "No", "No", "No", "Yes", "No", "No", "No", "No"…</span></a>
+<a class="sourceLine" id="cb2-19" data-line-number="19"><span class="co">#&gt; $ StreamingTV      &lt;chr&gt; "No", "No", "No", "No", "No", "Yes", "Yes", "No…</span></a>
+<a class="sourceLine" id="cb2-20" data-line-number="20"><span class="co">#&gt; $ StreamingMovies  &lt;chr&gt; "No", "No", "No", "No", "No", "Yes", "No", "No"…</span></a>
+<a class="sourceLine" id="cb2-21" data-line-number="21"><span class="co">#&gt; $ Contract         &lt;chr&gt; "Month-to-month", "One year", "Month-to-month",…</span></a>
+<a class="sourceLine" id="cb2-22" data-line-number="22"><span class="co">#&gt; $ PaperlessBilling &lt;chr&gt; "Yes", "No", "Yes", "No", "Yes", "Yes", "Yes", …</span></a>
+<a class="sourceLine" id="cb2-23" data-line-number="23"><span class="co">#&gt; $ PaymentMethod    &lt;chr&gt; "Electronic check", "Mailed check", "Mailed che…</span></a>
+<a class="sourceLine" id="cb2-24" data-line-number="24"><span class="co">#&gt; $ MonthlyCharges   &lt;dbl&gt; 29.85, 56.95, 53.85, 42.30, 70.70, 99.65, 89.10…</span></a>
+<a class="sourceLine" id="cb2-25" data-line-number="25"><span class="co">#&gt; $ TotalCharges     &lt;dbl&gt; 29.85, 1889.50, 108.15, 1840.75, 151.65, 820.50…</span></a>
+<a class="sourceLine" id="cb2-26" data-line-number="26"><span class="co">#&gt; $ Churn            &lt;chr&gt; "No", "No", "Yes", "No", "Yes", "Yes", "No", "N…</span></a></code></pre></div>
 <div id="step-1---prepare-data-as-binary-features" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-1---prepare-data-as-binary-features" class="anchor"></a>Step 1 - Prepare Data as Binary Features</h3>
 <p>We use the <code><a href="../reference/binarize.html">binarize()</a></code> function to produce a feature set of binary (0/1) variables. Numeric data are binned (using <code>n_bins</code>) into categorical data, then all categorical data is one-hot encoded to produce binary features. To prevent low frequency categories (high cardinality categories) from increasing the dimensionality (width of the resulting data frame), we use <code>thresh_infreq = 0.01</code> and <code>name_infreq = "OTHER"</code> to group excess categories.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1">customer_churn_binarized_tbl &lt;-<span class="st"> </span>customer_churn_tbl <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="st">  </span><span class="kw">select</span>(<span class="op">-</span>customerID) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-3" title="3"><span class="st">  </span><span class="kw">mutate</span>(<span class="dt">TotalCharges =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(TotalCharges), MonthlyCharges, TotalCharges)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb3-4" title="4"><span class="st">  </span><span class="kw"><a href="../reference/binarize.html">binarize</a></span>(<span class="dt">n_bins =</span> <span class="dv">5</span>, <span class="dt">thresh_infreq =</span> <span class="fl">0.01</span>, <span class="dt">name_infreq =</span> <span class="st">"OTHER"</span>, <span class="dt">one_hot =</span> <span class="ot">TRUE</span>)</a>
-<a class="sourceLine" id="cb3-5" title="5"></a>
-<a class="sourceLine" id="cb3-6" title="6">customer_churn_binarized_tbl</a>
-<a class="sourceLine" id="cb3-7" title="7"><span class="co">#&gt; # A tibble: 7,043 x 60</span></a>
-<a class="sourceLine" id="cb3-8" title="8"><span class="co">#&gt;    gender__Female gender__Male SeniorCitizen__0 SeniorCitizen__1</span></a>
-<a class="sourceLine" id="cb3-9" title="9"><span class="co">#&gt;             &lt;dbl&gt;        &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb3-10" title="10"><span class="co">#&gt;  1              1            0                1                0</span></a>
-<a class="sourceLine" id="cb3-11" title="11"><span class="co">#&gt;  2              0            1                1                0</span></a>
-<a class="sourceLine" id="cb3-12" title="12"><span class="co">#&gt;  3              0            1                1                0</span></a>
-<a class="sourceLine" id="cb3-13" title="13"><span class="co">#&gt;  4              0            1                1                0</span></a>
-<a class="sourceLine" id="cb3-14" title="14"><span class="co">#&gt;  5              1            0                1                0</span></a>
-<a class="sourceLine" id="cb3-15" title="15"><span class="co">#&gt;  6              1            0                1                0</span></a>
-<a class="sourceLine" id="cb3-16" title="16"><span class="co">#&gt;  7              0            1                1                0</span></a>
-<a class="sourceLine" id="cb3-17" title="17"><span class="co">#&gt;  8              1            0                1                0</span></a>
-<a class="sourceLine" id="cb3-18" title="18"><span class="co">#&gt;  9              1            0                1                0</span></a>
-<a class="sourceLine" id="cb3-19" title="19"><span class="co">#&gt; 10              0            1                1                0</span></a>
-<a class="sourceLine" id="cb3-20" title="20"><span class="co">#&gt; # ... with 7,033 more rows, and 56 more variables: Partner__No &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-21" title="21"><span class="co">#&gt; #   Partner__Yes &lt;dbl&gt;, Dependents__No &lt;dbl&gt;, Dependents__Yes &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-22" title="22"><span class="co">#&gt; #   `tenure__-Inf_6` &lt;dbl&gt;, tenure__6_20 &lt;dbl&gt;, tenure__20_40 &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-23" title="23"><span class="co">#&gt; #   tenure__40_60 &lt;dbl&gt;, tenure__60_Inf &lt;dbl&gt;, PhoneService__No &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-24" title="24"><span class="co">#&gt; #   PhoneService__Yes &lt;dbl&gt;, MultipleLines__No &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-25" title="25"><span class="co">#&gt; #   MultipleLines__No_phone_service &lt;dbl&gt;, MultipleLines__Yes &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-26" title="26"><span class="co">#&gt; #   InternetService__DSL &lt;dbl&gt;, InternetService__Fiber_optic &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-27" title="27"><span class="co">#&gt; #   InternetService__No &lt;dbl&gt;, OnlineSecurity__No &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-28" title="28"><span class="co">#&gt; #   OnlineSecurity__No_internet_service &lt;dbl&gt;, OnlineSecurity__Yes &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-29" title="29"><span class="co">#&gt; #   OnlineBackup__No &lt;dbl&gt;, OnlineBackup__No_internet_service &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-30" title="30"><span class="co">#&gt; #   OnlineBackup__Yes &lt;dbl&gt;, DeviceProtection__No &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-31" title="31"><span class="co">#&gt; #   DeviceProtection__No_internet_service &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-32" title="32"><span class="co">#&gt; #   DeviceProtection__Yes &lt;dbl&gt;, TechSupport__No &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-33" title="33"><span class="co">#&gt; #   TechSupport__No_internet_service &lt;dbl&gt;, TechSupport__Yes &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-34" title="34"><span class="co">#&gt; #   StreamingTV__No &lt;dbl&gt;, StreamingTV__No_internet_service &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-35" title="35"><span class="co">#&gt; #   StreamingTV__Yes &lt;dbl&gt;, StreamingMovies__No &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-36" title="36"><span class="co">#&gt; #   StreamingMovies__No_internet_service &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-37" title="37"><span class="co">#&gt; #   StreamingMovies__Yes &lt;dbl&gt;, `Contract__Month-to-month` &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-38" title="38"><span class="co">#&gt; #   Contract__One_year &lt;dbl&gt;, Contract__Two_year &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-39" title="39"><span class="co">#&gt; #   PaperlessBilling__No &lt;dbl&gt;, PaperlessBilling__Yes &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-40" title="40"><span class="co">#&gt; #   `PaymentMethod__Bank_transfer_(automatic)` &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-41" title="41"><span class="co">#&gt; #   `PaymentMethod__Credit_card_(automatic)` &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-42" title="42"><span class="co">#&gt; #   PaymentMethod__Electronic_check &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-43" title="43"><span class="co">#&gt; #   PaymentMethod__Mailed_check &lt;dbl&gt;, `MonthlyCharges__-Inf_25.05` &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-44" title="44"><span class="co">#&gt; #   MonthlyCharges__25.05_58.83 &lt;dbl&gt;, MonthlyCharges__58.83_79.1 &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-45" title="45"><span class="co">#&gt; #   MonthlyCharges__79.1_94.25 &lt;dbl&gt;, MonthlyCharges__94.25_Inf &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-46" title="46"><span class="co">#&gt; #   `TotalCharges__-Inf_265.32` &lt;dbl&gt;, TotalCharges__265.32_939.78 &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-47" title="47"><span class="co">#&gt; #   TotalCharges__939.78_2043.71 &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-48" title="48"><span class="co">#&gt; #   TotalCharges__2043.71_4471.44 &lt;dbl&gt;, TotalCharges__4471.44_Inf &lt;dbl&gt;,</span></a>
-<a class="sourceLine" id="cb3-49" title="49"><span class="co">#&gt; #   Churn__No &lt;dbl&gt;, Churn__Yes &lt;dbl&gt;</span></a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1">customer_churn_binarized_tbl &lt;-<span class="st"> </span>customer_churn_tbl <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="op">-</span>customerID) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3"><span class="st">  </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/mutate.html">mutate</a></span>(<span class="dt">TotalCharges =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/ifelse">ifelse</a></span>(<span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/NA">is.na</a></span>(TotalCharges), MonthlyCharges, TotalCharges)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4"><span class="st">  </span><span class="kw"><a href="../reference/binarize.html">binarize</a></span>(<span class="dt">n_bins =</span> <span class="dv">5</span>, <span class="dt">thresh_infreq =</span> <span class="fl">0.01</span>, <span class="dt">name_infreq =</span> <span class="st">"OTHER"</span>, <span class="dt">one_hot =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">customer_churn_binarized_tbl</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt; # A tibble: 7,043 x 60</span></a>
+<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt;    gender__Female gender__Male SeniorCitizen__0 SeniorCitizen__1</span></a>
+<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt;             &lt;dbl&gt;        &lt;dbl&gt;            &lt;dbl&gt;            &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt;  1              1            0                1                0</span></a>
+<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt;  2              0            1                1                0</span></a>
+<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt;  3              0            1                1                0</span></a>
+<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt;  4              0            1                1                0</span></a>
+<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt;  5              1            0                1                0</span></a>
+<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt;  6              1            0                1                0</span></a>
+<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt;  7              0            1                1                0</span></a>
+<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt;  8              1            0                1                0</span></a>
+<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt;  9              1            0                1                0</span></a>
+<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt; 10              0            1                1                0</span></a>
+<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co">#&gt; # … with 7,033 more rows, and 56 more variables: Partner__No &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">#&gt; #   Partner__Yes &lt;dbl&gt;, Dependents__No &lt;dbl&gt;, Dependents__Yes &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-22" data-line-number="22"><span class="co">#&gt; #   `tenure__-Inf_6` &lt;dbl&gt;, tenure__6_20 &lt;dbl&gt;, tenure__20_40 &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-23" data-line-number="23"><span class="co">#&gt; #   tenure__40_60 &lt;dbl&gt;, tenure__60_Inf &lt;dbl&gt;, PhoneService__No &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-24" data-line-number="24"><span class="co">#&gt; #   PhoneService__Yes &lt;dbl&gt;, MultipleLines__No &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-25" data-line-number="25"><span class="co">#&gt; #   MultipleLines__No_phone_service &lt;dbl&gt;, MultipleLines__Yes &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-26" data-line-number="26"><span class="co">#&gt; #   InternetService__DSL &lt;dbl&gt;, InternetService__Fiber_optic &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-27" data-line-number="27"><span class="co">#&gt; #   InternetService__No &lt;dbl&gt;, OnlineSecurity__No &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-28" data-line-number="28"><span class="co">#&gt; #   OnlineSecurity__No_internet_service &lt;dbl&gt;, OnlineSecurity__Yes &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-29" data-line-number="29"><span class="co">#&gt; #   OnlineBackup__No &lt;dbl&gt;, OnlineBackup__No_internet_service &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-30" data-line-number="30"><span class="co">#&gt; #   OnlineBackup__Yes &lt;dbl&gt;, DeviceProtection__No &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-31" data-line-number="31"><span class="co">#&gt; #   DeviceProtection__No_internet_service &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-32" data-line-number="32"><span class="co">#&gt; #   DeviceProtection__Yes &lt;dbl&gt;, TechSupport__No &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-33" data-line-number="33"><span class="co">#&gt; #   TechSupport__No_internet_service &lt;dbl&gt;, TechSupport__Yes &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-34" data-line-number="34"><span class="co">#&gt; #   StreamingTV__No &lt;dbl&gt;, StreamingTV__No_internet_service &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-35" data-line-number="35"><span class="co">#&gt; #   StreamingTV__Yes &lt;dbl&gt;, StreamingMovies__No &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-36" data-line-number="36"><span class="co">#&gt; #   StreamingMovies__No_internet_service &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-37" data-line-number="37"><span class="co">#&gt; #   StreamingMovies__Yes &lt;dbl&gt;, `Contract__Month-to-month` &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-38" data-line-number="38"><span class="co">#&gt; #   Contract__One_year &lt;dbl&gt;, Contract__Two_year &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-39" data-line-number="39"><span class="co">#&gt; #   PaperlessBilling__No &lt;dbl&gt;, PaperlessBilling__Yes &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-40" data-line-number="40"><span class="co">#&gt; #   `PaymentMethod__Bank_transfer_(automatic)` &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-41" data-line-number="41"><span class="co">#&gt; #   `PaymentMethod__Credit_card_(automatic)` &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-42" data-line-number="42"><span class="co">#&gt; #   PaymentMethod__Electronic_check &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-43" data-line-number="43"><span class="co">#&gt; #   PaymentMethod__Mailed_check &lt;dbl&gt;, `MonthlyCharges__-Inf_25.05` &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-44" data-line-number="44"><span class="co">#&gt; #   MonthlyCharges__25.05_58.83 &lt;dbl&gt;, MonthlyCharges__58.83_79.1 &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-45" data-line-number="45"><span class="co">#&gt; #   MonthlyCharges__79.1_94.25 &lt;dbl&gt;, MonthlyCharges__94.25_Inf &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-46" data-line-number="46"><span class="co">#&gt; #   `TotalCharges__-Inf_265.32` &lt;dbl&gt;, TotalCharges__265.32_939.78 &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-47" data-line-number="47"><span class="co">#&gt; #   TotalCharges__939.78_2043.71 &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-48" data-line-number="48"><span class="co">#&gt; #   TotalCharges__2043.71_4471.44 &lt;dbl&gt;, TotalCharges__4471.44_Inf &lt;dbl&gt;,</span></a>
+<a class="sourceLine" id="cb3-49" data-line-number="49"><span class="co">#&gt; #   Churn__No &lt;dbl&gt;, Churn__Yes &lt;dbl&gt;</span></a></code></pre></div>
 </div>
 <div id="step-2---correlate-to-the-target" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-2---correlate-to-the-target" class="anchor"></a>Step 2 - Correlate to the Target</h3>
 <p>Next, we use <code><a href="../reference/correlate.html">correlate()</a></code> to correlate the binary features to a target (in our case Customer Churn).</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">customer_churn_corr_tbl &lt;-<span class="st"> </span>customer_churn_binarized_tbl <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/correlate.html">correlate</a></span>(Churn__Yes)</a>
-<a class="sourceLine" id="cb4-3" title="3"></a>
-<a class="sourceLine" id="cb4-4" title="4">customer_churn_corr_tbl</a>
-<a class="sourceLine" id="cb4-5" title="5"><span class="co">#&gt; # A tibble: 60 x 3</span></a>
-<a class="sourceLine" id="cb4-6" title="6"><span class="co">#&gt;    feature         bin              correlation</span></a>
-<a class="sourceLine" id="cb4-7" title="7"><span class="co">#&gt;    &lt;fct&gt;           &lt;chr&gt;                  &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb4-8" title="8"><span class="co">#&gt;  1 Churn           No                    -1    </span></a>
-<a class="sourceLine" id="cb4-9" title="9"><span class="co">#&gt;  2 Churn           Yes                    1    </span></a>
-<a class="sourceLine" id="cb4-10" title="10"><span class="co">#&gt;  3 Contract        Month-to-month         0.405</span></a>
-<a class="sourceLine" id="cb4-11" title="11"><span class="co">#&gt;  4 OnlineSecurity  No                     0.343</span></a>
-<a class="sourceLine" id="cb4-12" title="12"><span class="co">#&gt;  5 TechSupport     No                     0.337</span></a>
-<a class="sourceLine" id="cb4-13" title="13"><span class="co">#&gt;  6 tenure          -Inf_6                 0.309</span></a>
-<a class="sourceLine" id="cb4-14" title="14"><span class="co">#&gt;  7 InternetService Fiber_optic            0.308</span></a>
-<a class="sourceLine" id="cb4-15" title="15"><span class="co">#&gt;  8 Contract        Two_year              -0.302</span></a>
-<a class="sourceLine" id="cb4-16" title="16"><span class="co">#&gt;  9 PaymentMethod   Electronic_check       0.302</span></a>
-<a class="sourceLine" id="cb4-17" title="17"><span class="co">#&gt; 10 OnlineBackup    No                     0.268</span></a>
-<a class="sourceLine" id="cb4-18" title="18"><span class="co">#&gt; # ... with 50 more rows</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">customer_churn_corr_tbl &lt;-<span class="st"> </span>customer_churn_binarized_tbl <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/correlate.html">correlate</a></span>(Churn__Yes)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">customer_churn_corr_tbl</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; # A tibble: 60 x 3</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt;    feature         bin              correlation</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt;    &lt;fct&gt;           &lt;chr&gt;                  &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt;  1 Churn           No                    -1    </span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt;  2 Churn           Yes                    1    </span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt;  3 Contract        Month-to-month         0.405</span></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt;  4 OnlineSecurity  No                     0.343</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt;  5 TechSupport     No                     0.337</span></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt;  6 tenure          -Inf_6                 0.309</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt;  7 InternetService Fiber_optic            0.308</span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt;  8 Contract        Two_year              -0.302</span></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt;  9 PaymentMethod   Electronic_check       0.302</span></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt; 10 OnlineBackup    No                     0.268</span></a>
+<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt; # … with 50 more rows</span></a></code></pre></div>
 </div>
 <div id="step-3---plot-the-correlation-funnel" class="section level3">
 <h3 class="hasAnchor">
 <a href="#step-3---plot-the-correlation-funnel" class="anchor"></a>Step 3 - Plot the Correlation Funnel</h3>
 <p>Finally, we visualize the correlation using the <code><a href="../reference/plot_correlation_funnel.html">plot_correlation_funnel()</a></code> function.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1">customer_churn_corr_tbl <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-2" title="2"><span class="st">  </span><span class="kw"><a href="../reference/plot_correlation_funnel.html">plot_correlation_funnel</a></span>()</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">customer_churn_corr_tbl <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="st">  </span><span class="kw"><a href="../reference/plot_correlation_funnel.html">plot_correlation_funnel</a></span>()</a></code></pre></div>
 <p><img src="introducing_correlation_funnel_files/figure-html/unnamed-chunk-5-1.png" width="70%" height="70%" style="display: block; margin: auto;"></p>
 </div>
 <div id="business-insights" class="section level3">

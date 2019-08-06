@@ -1,10 +1,10 @@
 ---
-title: "Key Considerations and FAQs"
+title: "Methodology, Key Considerations, and FAQs"
 output: 
   rmarkdown::html_vignette:
     toc: TRUE
 vignette: >
-  %\VignetteIndexEntry{Key Considerations and FAQs)}
+  %\VignetteIndexEntry{Methodology, Key Considerations, and FAQs}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -25,7 +25,7 @@ knitr::opts_chunk$set(
 ```
 
 
-The purpose of the Key Considerations and FAQs is to address questions that users have and to highlight key considerations before or after various steps in `correlationfunnel` process. 
+The purpose of the Methodology, Key Considerations, and FAQs is to address questions that users have regarding the `correlationfunnel` methodology and to highlight key considerations before or after various steps in `correlationfunnel` process. 
 
 Libraries used. 
 
@@ -36,7 +36,29 @@ library(tibble)
 library(ggplot2)
 library(stringr)
 library(forcats)
+library(knitr)
 ```
+
+## Methodology
+
+The method used is to perform ___binarization___, the process of converting numeric and categorical variables to binary variables, and then to perform ___correlation analysis___ (Pearson method is used by default as the `corelate()` function wraps `stats::cor()`). This method lends itself well to quickly understanding relationships in data.
+
+The Pearson correlation coefficient (see [phi coefficient](https://en.wikipedia.org/wiki/Phi_coefficient)) measures the linear correlation between two dichotomous (binary) variables. 
+
+$$\phi = \frac{f_{11}*f_{00}-f_{01}*f_{10}}{\sqrt{(f_{11}+f_{01})*(f_{10}+f_{00})*(f_{00}+f_{01})*(f_{10}+f_{11})}}$$
+
+Where from a Contingency Table, 
+
+```{r, echo=F}
+tribble(
+  ~"", ~`y=0`, ~`y=1`,
+  "x=0", "f00", "f01",
+  "x=1", "f10", "f11"
+) %>% knitr::kable()
+```
+
+
+Use of this method and tradeoffs are discussed at length herein and in L. Duan et al., 2014.[^1]
 
 ## Key Considerations
 
@@ -52,12 +74,21 @@ We recommend using the following best practices to get high performance with `co
 
 4. __Discard ALL Non-Numeric and Non-Categorial Data__ - Remove date or datetime features, generic discription fields. 
 
-5. __Sample Data if Large__ - Performance could become slow on large data sets (Many Features or Many Rows). 
-    - Start by sampling the data to reduce the row number. 
+6. __Sample Data if Large__ - Performance could become slow on large data sets (Many Columns, Many Rows, and Many Category Levels within Categorical Columns). 
+    - Use the `thresh_infreq` to limit the number of infrequently appearing categories
+    - Sample the data to reduce the row number. 
     - Run the Correlation Funnel, and select the best features.
     - Increase the rows with the best feature selections. 
     - Re-run the Correlation Funnel on the shorter-width (columns), larger-height (rows) dataset. 
-    
+
+### During Binarization
+
+The `binarize()` function performs the transformation from numeric/categorical data to binary data. Use the following parameters to ensure that the correlation step goes well. 
+
+1. __Specify Number of Bins (Numeric Data)__ - Use `n_bins` to control the number of bins that numeric data is binned into. Too many and data gets overly discrete. Too few and trend can be missed. Typically 4 or 5 bins is adequate.
+
+2. __Eliminate Infrequent Categories (Categorical Data)__ - Use `thresh_infreq` to control the appearance of infrequent categories. This will speed up processing of the correlation and prevent dimensionality (width of columns) getting out of control. Typically 0.01 threshold is adequate. 
+
 ### Prior to Correlation Step
 
 1. __Address Data Imbalance__ - The correlation analysis is susceptible to data imbalance. Try reducing the number of majority class rows to get a proportion of 75% to 25% majority to minority class. 
@@ -66,7 +97,9 @@ We recommend using the following best practices to get high performance with `co
 
 1. __Garbage In, Garbage Out__ - Using the `correlationfunnel` package on data that has little relationship will _not_ yield good results. If you are not getting good results by following the afformentioned "Key Considerations", then your data may have little relationship. This is useful and a sign that you may need to collect better data. 
 
-2. __Something Bad Happened or You Think Something Good Should Have Happened__ - File an error on [GitHub]() if you have a question and you believe that `correlationfunnel` should be reporting something differently and/or has an error. 
+2. __Something Bad Happened or You Think Something Good Should Have Happened__ - File an error on [GitHub](https://github.com/business-science/correlationfunnel/issues) if you have a question and you believe that `correlationfunnel` should be reporting something differently and/or has an error. 
+
+
 
 ## FAQs
 
@@ -358,4 +391,8 @@ marketing_campaign_tbl %>%
   correlate(TERM_DEPOSIT__yes) %>%
   plot_correlation_funnel(alpha = 0.7)
 ```
+
+# References
+
+[^1]: [L. Duan et al., 2014] Lian Duan, W. Nick Street, Yanchi Liu, Songhua Xu, and Brook Wu. 2014. Selecting the right correlation measure for binary data. ACM Trans. Knowl. Discov. Data 9, 2, Article 13 (September 2014), 28 pages. DOI: http://dx.doi.org/10.1145/2637484
 
