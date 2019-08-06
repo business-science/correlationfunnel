@@ -108,8 +108,10 @@
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
-<p>You can install the released version of <code>correlationfunnel</code> from <a href="https://github.com/business-science/">GitHub</a> with:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"business-science/correlationfunnel"</span>)</a></code></pre></div>
+<p>You can install the latest stable (CRAN) version of <code>correlationfunnel</code> with:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/install.packages">install.packages</a></span>(<span class="st">"correlationfunnel"</span>)</a></code></pre></div>
+<p>You can install the development version of <code>correlationfunnel</code> from <a href="https://github.com/business-science/">GitHub</a> with:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1">devtools<span class="op">::</span><span class="kw"><a href="https://www.rdocumentation.org/packages/devtools/topics/reexports">install_github</a></span>(<span class="st">"business-science/correlationfunnel"</span>)</a></code></pre></div>
 </div>
 <div id="correlation-funnel-in-2-minutes" class="section level2">
 <h2 class="hasAnchor">
@@ -139,33 +141,33 @@
 <h3 class="hasAnchor">
 <a href="#getting-started" class="anchor"></a>Getting Started</h3>
 <p>First, load the libraries.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(correlationfunnel)</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(correlationfunnel)</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/library">library</a></span>(dplyr)</a></code></pre></div>
 <p>Next, collect data to analyze. We’ll use Marketing Campaign Data for a Bank that was popularized by the <a href="https://archive.ics.uci.edu/ml/datasets/Bank+Marketing">UCI Machine Learning Repository</a>. We can load the data with <code><a href="https://www.rdocumentation.org/packages/utils/topics/data">data("marketing_campaign_tbl")</a></code>.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="co"># Use ?marketing_campagin_tbl to get a description of the marketing campaign features</span></a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"marketing_campaign_tbl"</span>)</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">marketing_campaign_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5"><span class="co">#&gt; Observations: 45,211</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6"><span class="co">#&gt; Variables: 18</span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="co">#&gt; $ ID           &lt;chr&gt; "2836", "2837", "2838", "2839", "2840", "2841", "28…</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8"><span class="co">#&gt; $ AGE          &lt;dbl&gt; 58, 44, 33, 47, 33, 35, 28, 42, 58, 43, 41, 29, 53,…</span></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9"><span class="co">#&gt; $ JOB          &lt;chr&gt; "management", "technician", "entrepreneur", "blue-c…</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10"><span class="co">#&gt; $ MARITAL      &lt;chr&gt; "married", "single", "married", "married", "single"…</span></a>
-<a class="sourceLine" id="cb3-11" data-line-number="11"><span class="co">#&gt; $ EDUCATION    &lt;chr&gt; "tertiary", "secondary", "secondary", "unknown", "u…</span></a>
-<a class="sourceLine" id="cb3-12" data-line-number="12"><span class="co">#&gt; $ DEFAULT      &lt;chr&gt; "no", "no", "no", "no", "no", "no", "no", "yes", "n…</span></a>
-<a class="sourceLine" id="cb3-13" data-line-number="13"><span class="co">#&gt; $ BALANCE      &lt;dbl&gt; 2143, 29, 2, 1506, 1, 231, 447, 2, 121, 593, 270, 3…</span></a>
-<a class="sourceLine" id="cb3-14" data-line-number="14"><span class="co">#&gt; $ HOUSING      &lt;chr&gt; "yes", "yes", "yes", "yes", "no", "yes", "yes", "ye…</span></a>
-<a class="sourceLine" id="cb3-15" data-line-number="15"><span class="co">#&gt; $ LOAN         &lt;chr&gt; "no", "no", "yes", "no", "no", "no", "yes", "no", "…</span></a>
-<a class="sourceLine" id="cb3-16" data-line-number="16"><span class="co">#&gt; $ CONTACT      &lt;chr&gt; "unknown", "unknown", "unknown", "unknown", "unknow…</span></a>
-<a class="sourceLine" id="cb3-17" data-line-number="17"><span class="co">#&gt; $ DAY          &lt;dbl&gt; 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, …</span></a>
-<a class="sourceLine" id="cb3-18" data-line-number="18"><span class="co">#&gt; $ MONTH        &lt;chr&gt; "may", "may", "may", "may", "may", "may", "may", "m…</span></a>
-<a class="sourceLine" id="cb3-19" data-line-number="19"><span class="co">#&gt; $ DURATION     &lt;dbl&gt; 261, 151, 76, 92, 198, 139, 217, 380, 50, 55, 222, …</span></a>
-<a class="sourceLine" id="cb3-20" data-line-number="20"><span class="co">#&gt; $ CAMPAIGN     &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …</span></a>
-<a class="sourceLine" id="cb3-21" data-line-number="21"><span class="co">#&gt; $ PDAYS        &lt;dbl&gt; -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,…</span></a>
-<a class="sourceLine" id="cb3-22" data-line-number="22"><span class="co">#&gt; $ PREVIOUS     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …</span></a>
-<a class="sourceLine" id="cb3-23" data-line-number="23"><span class="co">#&gt; $ POUTCOME     &lt;chr&gt; "unknown", "unknown", "unknown", "unknown", "unknow…</span></a>
-<a class="sourceLine" id="cb3-24" data-line-number="24"><span class="co">#&gt; $ TERM_DEPOSIT &lt;chr&gt; "no", "no", "no", "no", "no", "no", "no", "no", "no…</span></a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="co"># Use ?marketing_campagin_tbl to get a description of the marketing campaign features</span></a>
+<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="kw"><a href="https://www.rdocumentation.org/packages/utils/topics/data">data</a></span>(<span class="st">"marketing_campaign_tbl"</span>)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">marketing_campaign_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5"><span class="co">#&gt; Observations: 45,211</span></a>
+<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; Variables: 18</span></a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; $ ID           &lt;chr&gt; "2836", "2837", "2838", "2839", "2840", "2841", "28…</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt; $ AGE          &lt;dbl&gt; 58, 44, 33, 47, 33, 35, 28, 42, 58, 43, 41, 29, 53,…</span></a>
+<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt; $ JOB          &lt;chr&gt; "management", "technician", "entrepreneur", "blue-c…</span></a>
+<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt; $ MARITAL      &lt;chr&gt; "married", "single", "married", "married", "single"…</span></a>
+<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt; $ EDUCATION    &lt;chr&gt; "tertiary", "secondary", "secondary", "unknown", "u…</span></a>
+<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt; $ DEFAULT      &lt;chr&gt; "no", "no", "no", "no", "no", "no", "no", "yes", "n…</span></a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt; $ BALANCE      &lt;dbl&gt; 2143, 29, 2, 1506, 1, 231, 447, 2, 121, 593, 270, 3…</span></a>
+<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt; $ HOUSING      &lt;chr&gt; "yes", "yes", "yes", "yes", "no", "yes", "yes", "ye…</span></a>
+<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt; $ LOAN         &lt;chr&gt; "no", "no", "yes", "no", "no", "no", "yes", "no", "…</span></a>
+<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt; $ CONTACT      &lt;chr&gt; "unknown", "unknown", "unknown", "unknown", "unknow…</span></a>
+<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt; $ DAY          &lt;dbl&gt; 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, …</span></a>
+<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt; $ MONTH        &lt;chr&gt; "may", "may", "may", "may", "may", "may", "may", "m…</span></a>
+<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co">#&gt; $ DURATION     &lt;dbl&gt; 261, 151, 76, 92, 198, 139, 217, 380, 50, 55, 222, …</span></a>
+<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co">#&gt; $ CAMPAIGN     &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, …</span></a>
+<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co">#&gt; $ PDAYS        &lt;dbl&gt; -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,…</span></a>
+<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt; $ PREVIOUS     &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, …</span></a>
+<a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">#&gt; $ POUTCOME     &lt;chr&gt; "unknown", "unknown", "unknown", "unknown", "unknow…</span></a>
+<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co">#&gt; $ TERM_DEPOSIT &lt;chr&gt; "no", "no", "no", "no", "no", "no", "no", "no", "no…</span></a></code></pre></div>
 </div>
 <div id="response-predictor-relationships" class="section level3">
 <h3 class="hasAnchor">
@@ -185,118 +187,118 @@
 <li><p><strong>Categorical Features</strong>: Are binned by one-hot encoding</p></li>
 </ul>
 <p>The result is a data frame that has only binary data with columns representing the bins that the observations fall into. Note that the output is shown in the <code><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse()</a></code> format. THere are now 80 columns that are binary (0/1).</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" data-line-number="1">marketing_campaign_binarized_tbl &lt;-<span class="st"> </span>marketing_campaign_tbl <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"><span class="st">    </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="op">-</span>ID) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3"><span class="st">    </span><span class="kw"><a href="reference/binarize.html">binarize</a></span>(<span class="dt">n_bins =</span> <span class="dv">4</span>, <span class="dt">thresh_infreq =</span> <span class="fl">0.01</span>)</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4"></a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">marketing_campaign_binarized_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</a>
-<a class="sourceLine" id="cb4-6" data-line-number="6"><span class="co">#&gt; Observations: 45,211</span></a>
-<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="co">#&gt; Variables: 74</span></a>
-<a class="sourceLine" id="cb4-8" data-line-number="8"><span class="co">#&gt; $ `AGE__-Inf_33`       &lt;dbl&gt; 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-9" data-line-number="9"><span class="co">#&gt; $ AGE__33_39           &lt;dbl&gt; 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-10" data-line-number="10"><span class="co">#&gt; $ AGE__39_48           &lt;dbl&gt; 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-11" data-line-number="11"><span class="co">#&gt; $ AGE__48_Inf          &lt;dbl&gt; 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1…</span></a>
-<a class="sourceLine" id="cb4-12" data-line-number="12"><span class="co">#&gt; $ JOB__admin.          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="co">#&gt; $ `JOB__blue-collar`   &lt;dbl&gt; 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-14" data-line-number="14"><span class="co">#&gt; $ JOB__entrepreneur    &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-15" data-line-number="15"><span class="co">#&gt; $ JOB__housemaid       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-16" data-line-number="16"><span class="co">#&gt; $ JOB__management      &lt;dbl&gt; 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-17" data-line-number="17"><span class="co">#&gt; $ JOB__retired         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-18" data-line-number="18"><span class="co">#&gt; $ `JOB__self-employed` &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-19" data-line-number="19"><span class="co">#&gt; $ JOB__services        &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1…</span></a>
-<a class="sourceLine" id="cb4-20" data-line-number="20"><span class="co">#&gt; $ JOB__student         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-21" data-line-number="21"><span class="co">#&gt; $ JOB__technician      &lt;dbl&gt; 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0…</span></a>
-<a class="sourceLine" id="cb4-22" data-line-number="22"><span class="co">#&gt; $ JOB__unemployed      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-23" data-line-number="23"><span class="co">#&gt; $ `JOB__-OTHER`        &lt;dbl&gt; 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-24" data-line-number="24"><span class="co">#&gt; $ MARITAL__divorced    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-25" data-line-number="25"><span class="co">#&gt; $ MARITAL__married     &lt;dbl&gt; 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1…</span></a>
-<a class="sourceLine" id="cb4-26" data-line-number="26"><span class="co">#&gt; $ MARITAL__single      &lt;dbl&gt; 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-27" data-line-number="27"><span class="co">#&gt; $ EDUCATION__primary   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-28" data-line-number="28"><span class="co">#&gt; $ EDUCATION__secondary &lt;dbl&gt; 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1…</span></a>
-<a class="sourceLine" id="cb4-29" data-line-number="29"><span class="co">#&gt; $ EDUCATION__tertiary  &lt;dbl&gt; 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-30" data-line-number="30"><span class="co">#&gt; $ EDUCATION__unknown   &lt;dbl&gt; 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0…</span></a>
-<a class="sourceLine" id="cb4-31" data-line-number="31"><span class="co">#&gt; $ DEFAULT__no          &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1…</span></a>
-<a class="sourceLine" id="cb4-32" data-line-number="32"><span class="co">#&gt; $ DEFAULT__yes         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-33" data-line-number="33"><span class="co">#&gt; $ `BALANCE__-Inf_72`   &lt;dbl&gt; 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0…</span></a>
-<a class="sourceLine" id="cb4-34" data-line-number="34"><span class="co">#&gt; $ BALANCE__72_448      &lt;dbl&gt; 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1…</span></a>
-<a class="sourceLine" id="cb4-35" data-line-number="35"><span class="co">#&gt; $ BALANCE__448_1428    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-36" data-line-number="36"><span class="co">#&gt; $ BALANCE__1428_Inf    &lt;dbl&gt; 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-37" data-line-number="37"><span class="co">#&gt; $ HOUSING__no          &lt;dbl&gt; 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-38" data-line-number="38"><span class="co">#&gt; $ HOUSING__yes         &lt;dbl&gt; 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
-<a class="sourceLine" id="cb4-39" data-line-number="39"><span class="co">#&gt; $ LOAN__no             &lt;dbl&gt; 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
-<a class="sourceLine" id="cb4-40" data-line-number="40"><span class="co">#&gt; $ LOAN__yes            &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-41" data-line-number="41"><span class="co">#&gt; $ CONTACT__cellular    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-42" data-line-number="42"><span class="co">#&gt; $ CONTACT__telephone   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-43" data-line-number="43"><span class="co">#&gt; $ CONTACT__unknown     &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
-<a class="sourceLine" id="cb4-44" data-line-number="44"><span class="co">#&gt; $ `DAY__-Inf_8`        &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
-<a class="sourceLine" id="cb4-45" data-line-number="45"><span class="co">#&gt; $ DAY__8_16            &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-46" data-line-number="46"><span class="co">#&gt; $ DAY__16_21           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-47" data-line-number="47"><span class="co">#&gt; $ DAY__21_Inf          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-48" data-line-number="48"><span class="co">#&gt; $ MONTH__apr           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-49" data-line-number="49"><span class="co">#&gt; $ MONTH__aug           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-50" data-line-number="50"><span class="co">#&gt; $ MONTH__feb           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-51" data-line-number="51"><span class="co">#&gt; $ MONTH__jan           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-52" data-line-number="52"><span class="co">#&gt; $ MONTH__jul           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-53" data-line-number="53"><span class="co">#&gt; $ MONTH__jun           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-54" data-line-number="54"><span class="co">#&gt; $ MONTH__mar           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-55" data-line-number="55"><span class="co">#&gt; $ MONTH__may           &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
-<a class="sourceLine" id="cb4-56" data-line-number="56"><span class="co">#&gt; $ MONTH__nov           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-57" data-line-number="57"><span class="co">#&gt; $ MONTH__oct           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-58" data-line-number="58"><span class="co">#&gt; $ MONTH__sep           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-59" data-line-number="59"><span class="co">#&gt; $ `MONTH__-OTHER`      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-60" data-line-number="60"><span class="co">#&gt; $ `DURATION__-Inf_103` &lt;dbl&gt; 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0…</span></a>
-<a class="sourceLine" id="cb4-61" data-line-number="61"><span class="co">#&gt; $ DURATION__103_180    &lt;dbl&gt; 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1…</span></a>
-<a class="sourceLine" id="cb4-62" data-line-number="62"><span class="co">#&gt; $ DURATION__180_319    &lt;dbl&gt; 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-63" data-line-number="63"><span class="co">#&gt; $ DURATION__319_Inf    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-64" data-line-number="64"><span class="co">#&gt; $ `CAMPAIGN__-Inf_2`   &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
-<a class="sourceLine" id="cb4-65" data-line-number="65"><span class="co">#&gt; $ CAMPAIGN__2_3        &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-66" data-line-number="66"><span class="co">#&gt; $ CAMPAIGN__3_Inf      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-67" data-line-number="67"><span class="co">#&gt; $ `PDAYS__-1`          &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
-<a class="sourceLine" id="cb4-68" data-line-number="68"><span class="co">#&gt; $ `PDAYS__-OTHER`      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-69" data-line-number="69"><span class="co">#&gt; $ PREVIOUS__0          &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
-<a class="sourceLine" id="cb4-70" data-line-number="70"><span class="co">#&gt; $ PREVIOUS__1          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-71" data-line-number="71"><span class="co">#&gt; $ PREVIOUS__2          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-72" data-line-number="72"><span class="co">#&gt; $ PREVIOUS__3          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-73" data-line-number="73"><span class="co">#&gt; $ PREVIOUS__4          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-74" data-line-number="74"><span class="co">#&gt; $ PREVIOUS__5          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-75" data-line-number="75"><span class="co">#&gt; $ `PREVIOUS__-OTHER`   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-76" data-line-number="76"><span class="co">#&gt; $ POUTCOME__failure    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-77" data-line-number="77"><span class="co">#&gt; $ POUTCOME__other      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-78" data-line-number="78"><span class="co">#&gt; $ POUTCOME__success    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
-<a class="sourceLine" id="cb4-79" data-line-number="79"><span class="co">#&gt; $ POUTCOME__unknown    &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
-<a class="sourceLine" id="cb4-80" data-line-number="80"><span class="co">#&gt; $ TERM_DEPOSIT__no     &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
-<a class="sourceLine" id="cb4-81" data-line-number="81"><span class="co">#&gt; $ TERM_DEPOSIT__yes    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">marketing_campaign_binarized_tbl &lt;-<span class="st"> </span>marketing_campaign_tbl <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="st">    </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/select.html">select</a></span>(<span class="op">-</span>ID) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="st">    </span><span class="kw"><a href="reference/binarize.html">binarize</a></span>(<span class="dt">n_bins =</span> <span class="dv">4</span>, <span class="dt">thresh_infreq =</span> <span class="fl">0.01</span>)</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">marketing_campaign_binarized_tbl <span class="op">%&gt;%</span><span class="st"> </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/reexports.html">glimpse</a></span>()</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt; Observations: 45,211</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt; Variables: 74</span></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt; $ `AGE__-Inf_33`       &lt;dbl&gt; 0, 0, 1, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt; $ AGE__33_39           &lt;dbl&gt; 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt; $ AGE__39_48           &lt;dbl&gt; 0, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#&gt; $ AGE__48_Inf          &lt;dbl&gt; 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 1, 1…</span></a>
+<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">#&gt; $ JOB__admin.          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt; $ `JOB__blue-collar`   &lt;dbl&gt; 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt; $ JOB__entrepreneur    &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#&gt; $ JOB__housemaid       &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co">#&gt; $ JOB__management      &lt;dbl&gt; 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt; $ JOB__retired         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt; $ `JOB__self-employed` &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="co">#&gt; $ JOB__services        &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1…</span></a>
+<a class="sourceLine" id="cb5-20" data-line-number="20"><span class="co">#&gt; $ JOB__student         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-21" data-line-number="21"><span class="co">#&gt; $ JOB__technician      &lt;dbl&gt; 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0…</span></a>
+<a class="sourceLine" id="cb5-22" data-line-number="22"><span class="co">#&gt; $ JOB__unemployed      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-23" data-line-number="23"><span class="co">#&gt; $ `JOB__-OTHER`        &lt;dbl&gt; 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-24" data-line-number="24"><span class="co">#&gt; $ MARITAL__divorced    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-25" data-line-number="25"><span class="co">#&gt; $ MARITAL__married     &lt;dbl&gt; 1, 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 1, 1, 1…</span></a>
+<a class="sourceLine" id="cb5-26" data-line-number="26"><span class="co">#&gt; $ MARITAL__single      &lt;dbl&gt; 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-27" data-line-number="27"><span class="co">#&gt; $ EDUCATION__primary   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-28" data-line-number="28"><span class="co">#&gt; $ EDUCATION__secondary &lt;dbl&gt; 0, 1, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0, 1…</span></a>
+<a class="sourceLine" id="cb5-29" data-line-number="29"><span class="co">#&gt; $ EDUCATION__tertiary  &lt;dbl&gt; 1, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-30" data-line-number="30"><span class="co">#&gt; $ EDUCATION__unknown   &lt;dbl&gt; 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0…</span></a>
+<a class="sourceLine" id="cb5-31" data-line-number="31"><span class="co">#&gt; $ DEFAULT__no          &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1…</span></a>
+<a class="sourceLine" id="cb5-32" data-line-number="32"><span class="co">#&gt; $ DEFAULT__yes         &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-33" data-line-number="33"><span class="co">#&gt; $ `BALANCE__-Inf_72`   &lt;dbl&gt; 0, 1, 1, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 1, 0…</span></a>
+<a class="sourceLine" id="cb5-34" data-line-number="34"><span class="co">#&gt; $ BALANCE__72_448      &lt;dbl&gt; 0, 0, 0, 0, 0, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1…</span></a>
+<a class="sourceLine" id="cb5-35" data-line-number="35"><span class="co">#&gt; $ BALANCE__448_1428    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-36" data-line-number="36"><span class="co">#&gt; $ BALANCE__1428_Inf    &lt;dbl&gt; 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-37" data-line-number="37"><span class="co">#&gt; $ HOUSING__no          &lt;dbl&gt; 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-38" data-line-number="38"><span class="co">#&gt; $ HOUSING__yes         &lt;dbl&gt; 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
+<a class="sourceLine" id="cb5-39" data-line-number="39"><span class="co">#&gt; $ LOAN__no             &lt;dbl&gt; 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
+<a class="sourceLine" id="cb5-40" data-line-number="40"><span class="co">#&gt; $ LOAN__yes            &lt;dbl&gt; 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-41" data-line-number="41"><span class="co">#&gt; $ CONTACT__cellular    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-42" data-line-number="42"><span class="co">#&gt; $ CONTACT__telephone   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-43" data-line-number="43"><span class="co">#&gt; $ CONTACT__unknown     &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
+<a class="sourceLine" id="cb5-44" data-line-number="44"><span class="co">#&gt; $ `DAY__-Inf_8`        &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
+<a class="sourceLine" id="cb5-45" data-line-number="45"><span class="co">#&gt; $ DAY__8_16            &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-46" data-line-number="46"><span class="co">#&gt; $ DAY__16_21           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-47" data-line-number="47"><span class="co">#&gt; $ DAY__21_Inf          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-48" data-line-number="48"><span class="co">#&gt; $ MONTH__apr           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-49" data-line-number="49"><span class="co">#&gt; $ MONTH__aug           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-50" data-line-number="50"><span class="co">#&gt; $ MONTH__feb           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-51" data-line-number="51"><span class="co">#&gt; $ MONTH__jan           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-52" data-line-number="52"><span class="co">#&gt; $ MONTH__jul           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-53" data-line-number="53"><span class="co">#&gt; $ MONTH__jun           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-54" data-line-number="54"><span class="co">#&gt; $ MONTH__mar           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-55" data-line-number="55"><span class="co">#&gt; $ MONTH__may           &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
+<a class="sourceLine" id="cb5-56" data-line-number="56"><span class="co">#&gt; $ MONTH__nov           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-57" data-line-number="57"><span class="co">#&gt; $ MONTH__oct           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-58" data-line-number="58"><span class="co">#&gt; $ MONTH__sep           &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-59" data-line-number="59"><span class="co">#&gt; $ `MONTH__-OTHER`      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-60" data-line-number="60"><span class="co">#&gt; $ `DURATION__-Inf_103` &lt;dbl&gt; 0, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 0, 0, 1, 0…</span></a>
+<a class="sourceLine" id="cb5-61" data-line-number="61"><span class="co">#&gt; $ DURATION__103_180    &lt;dbl&gt; 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1…</span></a>
+<a class="sourceLine" id="cb5-62" data-line-number="62"><span class="co">#&gt; $ DURATION__180_319    &lt;dbl&gt; 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-63" data-line-number="63"><span class="co">#&gt; $ DURATION__319_Inf    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-64" data-line-number="64"><span class="co">#&gt; $ `CAMPAIGN__-Inf_2`   &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
+<a class="sourceLine" id="cb5-65" data-line-number="65"><span class="co">#&gt; $ CAMPAIGN__2_3        &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-66" data-line-number="66"><span class="co">#&gt; $ CAMPAIGN__3_Inf      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-67" data-line-number="67"><span class="co">#&gt; $ `PDAYS__-1`          &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
+<a class="sourceLine" id="cb5-68" data-line-number="68"><span class="co">#&gt; $ `PDAYS__-OTHER`      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-69" data-line-number="69"><span class="co">#&gt; $ PREVIOUS__0          &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
+<a class="sourceLine" id="cb5-70" data-line-number="70"><span class="co">#&gt; $ PREVIOUS__1          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-71" data-line-number="71"><span class="co">#&gt; $ PREVIOUS__2          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-72" data-line-number="72"><span class="co">#&gt; $ PREVIOUS__3          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-73" data-line-number="73"><span class="co">#&gt; $ PREVIOUS__4          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-74" data-line-number="74"><span class="co">#&gt; $ PREVIOUS__5          &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-75" data-line-number="75"><span class="co">#&gt; $ `PREVIOUS__-OTHER`   &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-76" data-line-number="76"><span class="co">#&gt; $ POUTCOME__failure    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-77" data-line-number="77"><span class="co">#&gt; $ POUTCOME__other      &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-78" data-line-number="78"><span class="co">#&gt; $ POUTCOME__success    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a>
+<a class="sourceLine" id="cb5-79" data-line-number="79"><span class="co">#&gt; $ POUTCOME__unknown    &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
+<a class="sourceLine" id="cb5-80" data-line-number="80"><span class="co">#&gt; $ TERM_DEPOSIT__no     &lt;dbl&gt; 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1…</span></a>
+<a class="sourceLine" id="cb5-81" data-line-number="81"><span class="co">#&gt; $ TERM_DEPOSIT__yes    &lt;dbl&gt; 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0…</span></a></code></pre></div>
 </div>
 <div id="step-2-perform-correlation-analysis" class="section level4">
 <h4 class="hasAnchor">
 <a href="#step-2-perform-correlation-analysis" class="anchor"></a>Step 2: Perform Correlation Analysis</h4>
 <p>The second step is to perform a correlation analysis between the response (target = TERM_DEPOSIT_yes) and the rest of the features. This returns a specially formatted tibble with the feature, the bin, and the bin’s correlation to the target. The format is exactly what we need for the next step - Producing the <strong>Correlation Funnel</strong></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" data-line-number="1">marketing_campaign_correlated_tbl &lt;-<span class="st"> </span>marketing_campaign_binarized_tbl <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="st">    </span><span class="kw"><a href="reference/correlate.html">correlate</a></span>(<span class="dt">target =</span> TERM_DEPOSIT__yes)</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">marketing_campaign_correlated_tbl</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="co">#&gt; # A tibble: 74 x 3</span></a>
-<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="co">#&gt;    feature      bin      correlation</span></a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="co">#&gt;    &lt;fct&gt;        &lt;chr&gt;          &lt;dbl&gt;</span></a>
-<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="co">#&gt;  1 TERM_DEPOSIT no            -1.000</span></a>
-<a class="sourceLine" id="cb5-9" data-line-number="9"><span class="co">#&gt;  2 TERM_DEPOSIT yes            1.000</span></a>
-<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="co">#&gt;  3 DURATION     319_Inf        0.318</span></a>
-<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="co">#&gt;  4 POUTCOME     success        0.307</span></a>
-<a class="sourceLine" id="cb5-12" data-line-number="12"><span class="co">#&gt;  5 DURATION     -Inf_103      -0.191</span></a>
-<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="co">#&gt;  6 PDAYS        -OTHER         0.167</span></a>
-<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="co">#&gt;  7 PDAYS        -1            -0.167</span></a>
-<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="co">#&gt;  8 PREVIOUS     0             -0.167</span></a>
-<a class="sourceLine" id="cb5-16" data-line-number="16"><span class="co">#&gt;  9 POUTCOME     unknown       -0.167</span></a>
-<a class="sourceLine" id="cb5-17" data-line-number="17"><span class="co">#&gt; 10 CONTACT      unknown       -0.151</span></a>
-<a class="sourceLine" id="cb5-18" data-line-number="18"><span class="co">#&gt; # … with 64 more rows</span></a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">marketing_campaign_correlated_tbl &lt;-<span class="st"> </span>marketing_campaign_binarized_tbl <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="st">    </span><span class="kw"><a href="reference/correlate.html">correlate</a></span>(<span class="dt">target =</span> TERM_DEPOSIT__yes)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">marketing_campaign_correlated_tbl</a>
+<a class="sourceLine" id="cb6-5" data-line-number="5"><span class="co">#&gt; # A tibble: 74 x 3</span></a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"><span class="co">#&gt;    feature      bin      correlation</span></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="co">#&gt;    &lt;fct&gt;        &lt;chr&gt;          &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb6-8" data-line-number="8"><span class="co">#&gt;  1 TERM_DEPOSIT no            -1.000</span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"><span class="co">#&gt;  2 TERM_DEPOSIT yes            1.000</span></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10"><span class="co">#&gt;  3 DURATION     319_Inf        0.318</span></a>
+<a class="sourceLine" id="cb6-11" data-line-number="11"><span class="co">#&gt;  4 POUTCOME     success        0.307</span></a>
+<a class="sourceLine" id="cb6-12" data-line-number="12"><span class="co">#&gt;  5 DURATION     -Inf_103      -0.191</span></a>
+<a class="sourceLine" id="cb6-13" data-line-number="13"><span class="co">#&gt;  6 PDAYS        -OTHER         0.167</span></a>
+<a class="sourceLine" id="cb6-14" data-line-number="14"><span class="co">#&gt;  7 PDAYS        -1            -0.167</span></a>
+<a class="sourceLine" id="cb6-15" data-line-number="15"><span class="co">#&gt;  8 PREVIOUS     0             -0.167</span></a>
+<a class="sourceLine" id="cb6-16" data-line-number="16"><span class="co">#&gt;  9 POUTCOME     unknown       -0.167</span></a>
+<a class="sourceLine" id="cb6-17" data-line-number="17"><span class="co">#&gt; 10 CONTACT      unknown       -0.151</span></a>
+<a class="sourceLine" id="cb6-18" data-line-number="18"><span class="co">#&gt; # … with 64 more rows</span></a></code></pre></div>
 </div>
 <div id="step-3-visualize-the-correlation-funnel" class="section level4">
 <h4 class="hasAnchor">
 <a href="#step-3-visualize-the-correlation-funnel" class="anchor"></a>Step 3: Visualize the Correlation Funnel</h4>
 <p>A <strong>Correlation Funnel</strong> is an tornado plot that lists the highest correlation features (based on absolute magnitude) at the top of the and the lowest correlation features at the bottom. The resulting visualization looks like a Funnel.</p>
 <p>To produce the <strong>Correlation Funnel</strong>, use <code><a href="reference/plot_correlation_funnel.html">plot_correlation_funnel()</a></code>. Try setting <code>interactive = TRUE</code> to get an interactive plot that can be zoomed in on.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" data-line-number="1">marketing_campaign_correlated_tbl <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb6-2" data-line-number="2"><span class="st">    </span><span class="kw"><a href="reference/plot_correlation_funnel.html">plot_correlation_funnel</a></span>(<span class="dt">interactive =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">marketing_campaign_correlated_tbl <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="st">    </span><span class="kw"><a href="reference/plot_correlation_funnel.html">plot_correlation_funnel</a></span>(<span class="dt">interactive =</span> <span class="ot">FALSE</span>)</a></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-5-1.png" width="100%"></p>
 </div>
 </div>
@@ -304,10 +306,10 @@
 <h3 class="hasAnchor">
 <a href="#examining-the-results" class="anchor"></a>Examining the Results</h3>
 <p>The most important features are towards the top. We can investigate these.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" data-line-number="1">marketing_campaign_correlated_tbl <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="st">    </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(feature <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"DURATION"</span>, <span class="st">"POUTCOME"</span>, <span class="st">"PDAYS"</span>, </a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">                          <span class="st">"PREVIOUS"</span>, <span class="st">"CONTACT"</span>, <span class="st">"HOUSING"</span>)) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb7-4" data-line-number="4"><span class="st">    </span><span class="kw"><a href="reference/plot_correlation_funnel.html">plot_correlation_funnel</a></span>(<span class="dt">interactive =</span> <span class="ot">FALSE</span>, <span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">-</span><span class="fl">0.4</span>, <span class="fl">0.4</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" data-line-number="1">marketing_campaign_correlated_tbl <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="st">    </span><span class="kw"><a href="https://dplyr.tidyverse.org/reference/filter.html">filter</a></span>(feature <span class="op">%in%</span><span class="st"> </span><span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="st">"DURATION"</span>, <span class="st">"POUTCOME"</span>, <span class="st">"PDAYS"</span>, </a>
+<a class="sourceLine" id="cb8-3" data-line-number="3">                          <span class="st">"PREVIOUS"</span>, <span class="st">"CONTACT"</span>, <span class="st">"HOUSING"</span>)) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="st">    </span><span class="kw"><a href="reference/plot_correlation_funnel.html">plot_correlation_funnel</a></span>(<span class="dt">interactive =</span> <span class="ot">FALSE</span>, <span class="dt">limits =</span> <span class="kw"><a href="https://www.rdocumentation.org/packages/base/topics/c">c</a></span>(<span class="op">-</span><span class="fl">0.4</span>, <span class="fl">0.4</span>))</a></code></pre></div>
 <p><img src="reference/figures/README-unnamed-chunk-6-1.png" width="100%"></p>
 <p>We can see that the following prospect groups have a much greater correlation with enrollment in the TERM DEPOSIT product:</p>
 <ul>
@@ -353,6 +355,8 @@
     <div class="links">
 <h2>Links</h2>
 <ul class="list-unstyled">
+<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=correlationfunnel">https://​cloud.r-project.org/​package=correlationfunnel</a>
+</li>
 <li>Browse source code at <br><a href="https://github.com/business-science/correlationfunnel">https://​github.com/​business-science/​correlationfunnel</a>
 </li>
 <li>Report a bug at <br><a href="https://github.com/business-science/correlationfunnel/issues">https://​github.com/​business-science/​correlationfunnel/​issues</a>

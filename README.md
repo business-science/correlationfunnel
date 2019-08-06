@@ -22,7 +22,14 @@ The goal of `correlationfunnel` is to speed up Exploratory Data Analysis
 
 ## Installation
 
-You can install the released version of `correlationfunnel` from
+You can install the latest stable (CRAN) version of `correlationfunnel`
+with:
+
+``` r
+install.packages("correlationfunnel")
+```
+
+You can install the development version of `correlationfunnel` from
 [GitHub](https://github.com/business-science/) with:
 
 ``` r

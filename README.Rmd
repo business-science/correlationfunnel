@@ -36,7 +36,14 @@ The goal of `correlationfunnel` is to speed up Exploratory Data Analysis (EDA). 
 
 ## Installation
 
-You can install the released version of `correlationfunnel` from [GitHub](https://github.com/business-science/) with:
+You can install the latest stable (CRAN) version of `correlationfunnel` with:
+
+``` r
+install.packages("correlationfunnel")
+```
+
+
+You can install the development version of `correlationfunnel` from [GitHub](https://github.com/business-science/) with:
 
 ``` r
 devtools::install_github("business-science/correlationfunnel")
