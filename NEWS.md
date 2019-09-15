@@ -1,4 +1,9 @@
 
+# correlationfunel 0.2.0
+
+* Fix - Allow `integer` data to be `binarize()`-ed
+* Fix - Allow `logical` data to be `binarize()`-ed. Values are converted to `integer` and then binarized. 
+
 # correlationfunnel 0.1.0
 
 * Initial CRAN Submission
