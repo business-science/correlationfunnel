@@ -54,10 +54,9 @@ binarize.default <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq
 binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_infreq = "-OTHER", one_hot = TRUE) {
 
     # CHECKS ----
-
     # Check data is charater, factor, or numeric
     check_data_type(data,
-                    classes_allowed = c("numeric", "integer", "character", "factor", "ordered"),
+                    classes_allowed = c("numeric", "integer", "logical", "character", "factor", "ordered"),
                     .fun_name = "binarize")
 
     # Check missing
@@ -69,6 +68,9 @@ binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_inf
     # binary_split <- split_binary(data)
     # data <- binary_split[["not_binary_data"]]
     # data_binary <- binary_split[["binary_data"]]
+
+    # Convert logical to integer
+    data <- logical_to_integer(data)
 
     # NON-BINARY DATA ----
     if (ncol(data) > 0) {
@@ -348,4 +350,7 @@ handle_binned_names <- function(data, recipe) {
     return(data)
 }
 
-
+logical_to_integer <- function(data) {
+    data %>%
+        dplyr::mutate_if(is.logical, as.integer)
+}
