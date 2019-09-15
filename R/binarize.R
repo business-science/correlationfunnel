@@ -57,7 +57,7 @@ binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_inf
 
     # Check data is charater, factor, or numeric
     check_data_type(data,
-                    classes_allowed = c("numeric", "character", "factor", "ordered"),
+                    classes_allowed = c("numeric", "integer", "character", "factor", "ordered"),
                     .fun_name = "binarize")
 
     # Check missing
@@ -115,7 +115,7 @@ binarize.data.frame <- function(data, n_bins = 4, thresh_infreq = 0.01, name_inf
 # SUPPORTING FUNCTIONS -----
 
 # Checks for missing values
-check_data_type <- function(data, classes_allowed = c("numeric", "character", "factor", "ordered"), .fun_name = NULL) {
+check_data_type <- function(data, classes_allowed = c("numeric", "integer", "character", "factor", "ordered"), .fun_name = NULL) {
 
     class_summary_tbl <- data %>%
         purrr::map_df(~ class(.)[[1]]) %>%
