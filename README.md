@@ -6,7 +6,7 @@
 *by [Business Science](https://www.business-science.io/)*
 
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+maturing](https://img.shields.io/badge/lifecycle-maturing-blue.svg)](https://www.tidyverse.org/lifecycle/#maturing)
 [![Travis build
 status](https://travis-ci.org/business-science/correlationfunnel.svg?branch=master)](https://travis-ci.org/business-science/correlationfunnel)
 [![Coverage
