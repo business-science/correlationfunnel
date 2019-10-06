@@ -1,7 +1,7 @@
 Package: correlationfunnel
 Type: Package
 Title: Speed Up Exploratory Data Analysis (EDA) with the Correlation Funnel
-Version: 0.2.0
+Version: 0.2.0.999
 Authors@R: 
     person("Matt", "Dancho", email = "mdancho@business-science.io", role = c("aut", "cre"))
 Description: 

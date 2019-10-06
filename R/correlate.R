@@ -58,7 +58,7 @@ correlate.data.frame <- function(data, target, ...) {
 
     # Check all data is numeric
     check_data_type(data,
-                    classes_allowed = "numeric",
+                    classes_allowed = c("numeric", "integer", "logical"),
                     .fun_name = "correlate")
 
     # Extract target
