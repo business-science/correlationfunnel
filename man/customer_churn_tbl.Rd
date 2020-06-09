@@ -4,7 +4,9 @@
 \name{customer_churn_tbl}
 \alias{customer_churn_tbl}
 \title{Customer Churn Data Set for a Telecommunications Company}
-\format{An object of class \code{spec_tbl_df} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 7043 rows and 21 columns.}
+\format{
+An object of class \code{spec_tbl_df} (inherits from \code{tbl_df}, \code{tbl}, \code{data.frame}) with 7043 rows and 21 columns.
+}
 \source{
 \href{https://community.ibm.com/community/user/gettingstarted/home}{IBM Sample Datasets}
 }
@@ -14,8 +16,7 @@ customer_churn_tbl
 \description{
 A dataset containing data related to telecom customers that have enrolled in various products and services
 }
-\details{
-Telecom Customer Data:
+\section{Telecom Customer Data:}{
 \itemize{
 \item customerID (chr): CUSTOMER ID
 \item gender (chr): Customer's gender ("Female", "Male")
@@ -40,4 +41,5 @@ Telecom Customer Data:
 \item Churn (chr): Outcome. Whether the customer churned or not (Yes or No)
 }
 }
+
 \keyword{datasets}

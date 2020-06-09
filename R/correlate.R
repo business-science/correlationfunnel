@@ -72,8 +72,8 @@ correlate.data.frame <- function(data, target, ...) {
     # Correlation logic
     data_transformed_tbl <- data %>%
         stats::cor(y = y, ...) %>%
-        tibble::as_tibble(rownames = "feature") %>%
-        dplyr::rename(correlation = V1) %>%
+        tibble::as_tibble(rownames = "feature", .name_repair = "minimal") %>%
+        dplyr::rename(correlation = 2) %>%
         tidyr::separate(feature, into = c("feature", "bin"), sep = "__") %>%
         dplyr::filter(!is.na(correlation)) %>%
         dplyr::arrange(abs(correlation) %>% dplyr::desc()) %>%

@@ -15,7 +15,7 @@ knitr::opts_chunk$set(
   comment = "#>",
   warning = FALSE,
   message = FALSE,
-  dpi = 300
+  dpi = 100
 )
 ```
 
@@ -84,7 +84,7 @@ customer_churn_binarized_tbl <- customer_churn_tbl %>%
   mutate(TotalCharges = ifelse(is.na(TotalCharges), MonthlyCharges, TotalCharges)) %>%
   binarize(n_bins = 5, thresh_infreq = 0.01, name_infreq = "OTHER", one_hot = TRUE)
 
-customer_churn_binarized_tbl
+customer_churn_binarized_tbl %>% glimpse()
 ```
 
 ### Step 2 - Correlate to the Target

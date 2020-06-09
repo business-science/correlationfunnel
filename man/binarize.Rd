@@ -4,8 +4,13 @@
 \alias{binarize}
 \title{Turn data with numeric, categorical features into binary data.}
 \usage{
-binarize(data, n_bins = 4, thresh_infreq = 0.01,
-  name_infreq = "-OTHER", one_hot = TRUE)
+binarize(
+  data,
+  n_bins = 4,
+  thresh_infreq = 0.01,
+  name_infreq = "-OTHER",
+  one_hot = TRUE
+)
 }
 \arguments{
 \item{data}{A \code{tibble} or \code{data.frame}}
@@ -26,10 +31,13 @@ A \code{tbl}
 \code{binarize} returns the binary data coverted from data in normal (numeric and categorical) format.
 }
 \details{
-The Goal
+\subsection{The Goal}{
 
 The binned format helps correlation analysis to identify non-linear trends between a predictor (binned values) and a
-response (the target)What Binarize Does
+response (the target)
+}
+
+\subsection{What Binarize Does}{
 
 The \code{binarize()} function takes data in a "normal" format and converts to a binary format that is useful as a preparation
 step before using \code{\link[=correlate]{correlate()}}:
@@ -41,6 +49,7 @@ The \code{binarize()} function converts these to bins (categories) and then disc
 \strong{Categorical Features}:
 The "Normal Data" format has categorical features that are \code{character} or \code{factor} format.
 The \code{binarize()} function converts these to binary features using a one-hot encoding process.
+}
 }
 \examples{
 library(dplyr)

@@ -1,7 +1,7 @@
 Package: correlationfunnel
 Type: Package
 Title: Speed Up Exploratory Data Analysis (EDA) with the Correlation Funnel
-Version: 0.2.0.999
+Version: 0.2.0
 Authors@R: 
     person("Matt", "Dancho", email = "mdancho@business-science.io", role = c("aut", "cre"))
 Description: 
@@ -24,8 +24,8 @@ Imports:
     magrittr,
     plotly,
     tibble,
-    dplyr,
-    tidyr,
+    dplyr (>= 1.0.0),
+    tidyr (>= 1.0.0),
     stats,
     utils,
     ggrepel,
@@ -42,6 +42,6 @@ Suggests:
     covr,
     lubridate,
     testthat (>= 2.1.0)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0
 Roxygen: list(markdown = TRUE)
 VignetteBuilder: knitr

@@ -230,7 +230,7 @@ fix_high_skew_numeric_data <- function(data, n_bins, unique_limit) {
         # Inspect feature distributions
         column_quantiles_tbl <- data %>%
             dplyr::select_if(is.numeric) %>%
-            purrr::map_df(stats::quantile)
+            purrr::map_dfc(stats::quantile)
 
         # Count unique quantiles
         column_unique_count_tbl <- column_quantiles_tbl %>%
