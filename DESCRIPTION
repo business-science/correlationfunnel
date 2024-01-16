@@ -10,7 +10,7 @@ Description:
     which features have relationships to target (response). Uses binary correlation analysis
     to determine relationship. Default correlation method is the Pearson method. 
     Lian Duan, W Nick Street, Yanchi Liu, Songhua Xu, and Brook Wu (2014) <doi:10.1145/2637484>.
-URL: https://github.com/business-science/correlationfunnel
+URL: https://github.com/business-science/correlationfunnel, https://business-science.github.io/correlationfunnel/
 BugReports: https://github.com/business-science/correlationfunnel/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
